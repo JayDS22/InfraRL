@@ -23,4 +23,4 @@ MSAI/MSML 635, University of Maryland, Fall 2026.
 pip install -r requirements.txt
 ```
 
-See `proposal.pdf` and `ROADMAP.md` for details.
+See `proposal.pdf` and `ROADMAP.md` for details. Dataflow and RL loop diagrams in `docs/`.

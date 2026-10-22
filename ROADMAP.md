@@ -1,5 +1,7 @@
 # Roadmap
 
+![roadmap](docs/roadmap.png)
+
 ## Timeline
 
 - Weeks 1-2 (Oct 13 - Oct 26): Interim Report, environment setup, bandit baseline

@@ -1,0 +1,41 @@
+flowchart TB
+    classDef setup   fill:#f8f9fa,stroke:#b2bec3,color:#2d3436
+    classDef env     fill:#ffffff,stroke:#b2bec3,color:#2d3436
+    classDef agent   fill:#2563eb,stroke:#1d4ed8,color:#ffffff
+    classDef sim     fill:#f8f9fa,stroke:#dfe6e9,color:#2d3436
+    classDef reward  fill:#ffffff,stroke:#d63031,color:#d63031
+    classDef out     fill:#ffffff,stroke:#636e72,color:#2d3436
+
+    PG["profiles.generate_profiles<br/>n=1000 · 6 use cases · seed"]:::setup
+    R["env.reset(profile)<br/>s_0 · mask_0"]:::env
+
+    PG --> R
+    R --> SA
+
+    subgraph STEP ["step loop · one episode"]
+        direction TB
+        MASK["env.action_masks<br/>mask_t"]:::env
+        SA["agent.select_action<br/>(s_t, mask_t)"]:::agent
+        STEPC["env.step(a_t)<br/>commit · next mask"]:::env
+        UP["agent.update(trans)<br/>every step · r=0 if t<4"]:::agent
+
+        MASK -->|mask_t| SA
+        SA -->|a_t| STEPC
+        STEPC -->|"t<4"| UP
+        UP -->|"s_{t+1}"| MASK
+    end
+
+    STEPC ==>|"terminal step"| SIM
+
+    SIM["simulator.estimate<br/>(stack, profile)"]:::sim
+    HW["hardware.is_feasible<br/>memory · throughput"]:::sim
+    MQ["models.quality<br/>LMSYS · HumanEval · MMLU"]:::sim
+    CFG["config.penalty<br/>precision · batch · scale"]:::sim
+    QLC["(Q, L_ms, cost_$/mo)"]:::sim
+
+    SIM --> HW --> MQ --> CFG --> QLC
+    QLC --> RW["reward.compose<br/>0.4·Q + 0.3·B + 0.2·S + 0.1·E"]:::reward
+    RW -.->|r_T + breakdown| UP
+
+    UP -.->|per episode| LOG["experiments.log_episode<br/>CSV · metrics"]:::out
+    LOG --> PLOTS["plots<br/>Pareto · heatmap · curve · drift"]:::out
