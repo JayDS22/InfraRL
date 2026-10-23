@@ -7,19 +7,19 @@
                 <mxCell id="title" value="InfraRL - 8-Week Roadmap" style="text;html=1;fontSize=22;fontStyle=1;align=left;fontColor=#2d3436;" parent="1" vertex="1">
                     <mxGeometry x="40" y="24" width="600" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="subtitle" value="Oct 13 to Dec 7  ·  4 fortnights  ·  4 gates  ·  Interim Oct 26 at 17:00  ·  Final Dec 7 at 23:59" style="text;html=1;fontSize=11;fontStyle=2;align=left;fontColor=#636e72;" parent="1" vertex="1">
+                <mxCell id="subtitle" value="Oct 13 to Dec 7  ·  4 fortnights  ·  4 gates  ·  Interim Oct 26 at 17:00  ·  Final Dec 7 at 23:59" style="text;html=1;fontSize=13;fontStyle=2;align=left;fontColor=#636e72;" parent="1" vertex="1">
                     <mxGeometry x="40" y="58" width="1000" height="18" as="geometry"/>
                 </mxCell>
-                <mxCell id="ph_f1" value="&lt;b style=&quot;font-size:14px&quot;&gt;F1&lt;/b&gt;  ·  Oct 13 to Oct 26&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Interim Report crunch  ·  in progress&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9e7;strokeColor=#fcd34d;fontSize=11;fontColor=#2d3436;arcSize=6;align=left;spacingLeft=14;spacingTop=6;" parent="1" vertex="1">
+                <mxCell id="ph_f1" value="&lt;b style=&quot;font-size:14px&quot;&gt;F1&lt;/b&gt;  ·  Oct 13 to Oct 26&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Interim Report crunch  ·  in progress&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9e7;strokeColor=#fcd34d;fontSize=13;fontColor=#2d3436;arcSize=6;align=left;spacingLeft=14;spacingTop=6;" parent="1" vertex="1">
                     <mxGeometry x="200" y="100" width="290" height="48" as="geometry"/>
                 </mxCell>
-                <mxCell id="ph_f2" value="&lt;b style=&quot;font-size:14px&quot;&gt;F2&lt;/b&gt;  ·  Oct 27 to Nov 9&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Ground floor&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#dfe6e9;fontSize=11;fontColor=#2d3436;arcSize=6;align=left;spacingLeft=14;spacingTop=6;" parent="1" vertex="1">
+                <mxCell id="ph_f2" value="&lt;b style=&quot;font-size:14px&quot;&gt;F2&lt;/b&gt;  ·  Oct 27 to Nov 9&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Ground floor&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#dfe6e9;fontSize=13;fontColor=#2d3436;arcSize=6;align=left;spacingLeft=14;spacingTop=6;" parent="1" vertex="1">
                     <mxGeometry x="500" y="100" width="290" height="48" as="geometry"/>
                 </mxCell>
-                <mxCell id="ph_f3" value="&lt;b style=&quot;font-size:14px&quot;&gt;F3&lt;/b&gt;  ·  Nov 10 to Nov 23&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Deep algorithms + first eval&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#dfe6e9;fontSize=11;fontColor=#2d3436;arcSize=6;align=left;spacingLeft=14;spacingTop=6;" parent="1" vertex="1">
+                <mxCell id="ph_f3" value="&lt;b style=&quot;font-size:14px&quot;&gt;F3&lt;/b&gt;  ·  Nov 10 to Nov 23&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Deep algorithms + first eval&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#dfe6e9;fontSize=13;fontColor=#2d3436;arcSize=6;align=left;spacingLeft=14;spacingTop=6;" parent="1" vertex="1">
                     <mxGeometry x="800" y="100" width="290" height="48" as="geometry"/>
                 </mxCell>
-                <mxCell id="ph_f4" value="&lt;b style=&quot;font-size:14px&quot;&gt;F4&lt;/b&gt;  ·  Nov 24 to Dec 7&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Final sprint  ·  Thanksgiving Nov 26-29&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff5f5;strokeColor=#fecaca;fontSize=11;fontColor=#2d3436;arcSize=6;align=left;spacingLeft=14;spacingTop=6;" parent="1" vertex="1">
+                <mxCell id="ph_f4" value="&lt;b style=&quot;font-size:14px&quot;&gt;F4&lt;/b&gt;  ·  Nov 24 to Dec 7&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Final sprint  ·  Thanksgiving Nov 26-29&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff5f5;strokeColor=#fecaca;fontSize=13;fontColor=#2d3436;arcSize=6;align=left;spacingLeft=14;spacingTop=6;" parent="1" vertex="1">
                     <mxGeometry x="1100" y="100" width="290" height="48" as="geometry"/>
                 </mxCell>
                 <mxCell id="a_bar" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#10B981;strokeColor=none;" vertex="1" parent="1">
@@ -40,40 +40,40 @@
                 <mxCell id="v_label" value="Vishnu&lt;br&gt;&lt;span style=&quot;font-size:10px;font-weight:normal;color:#636e72&quot;&gt;Eval&lt;/span&gt;" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#2d3436;align=left;" vertex="1" parent="1">
                     <mxGeometry x="56" y="485" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="a_f1" value="&lt;b&gt;Calibration method draft&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;hardware specs lookup approach · 2 cited sources&lt;br&gt;· 1-page §4 for Interim: Nebius + MLPerf&lt;br&gt;· not full impl yet · plan for F2&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="a_f1" value="&lt;b&gt;Calibration method draft&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;hardware specs lookup approach · 2 cited sources&lt;br&gt;· 1-page §4 for Interim: Nebius + MLPerf&lt;br&gt;· not full impl yet · plan for F2&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="200" y="180" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="a_f2" value="&lt;b&gt;HARDWARE_SPECS + 100 profiles&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;4 hw × 4 models lookup table&lt;br&gt;· estimate() returns (Q, L, cost)&lt;br&gt;· pytest green · 1 Nebius config ±15%&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="a_f2" value="&lt;b&gt;HARDWARE_SPECS + 100 profiles&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;4 hw × 4 models lookup table&lt;br&gt;· estimate() returns (Q, L, cost)&lt;br&gt;· pytest green · 1 Nebius config ±15%&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="500" y="180" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="a_f3" value="&lt;b&gt;Scale to 1000 + calibrate quality&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;6 use cases · LMSYS, HumanEval, MMLU&lt;br&gt;· peak-traffic latency variance&lt;br&gt;· 2 calibration tables in docs/&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="a_f3" value="&lt;b&gt;Scale to 1000 + calibrate quality&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;6 use cases · LMSYS, HumanEval, MMLU&lt;br&gt;· peak-traffic latency variance&lt;br&gt;· 2 calibration tables in docs/&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="800" y="180" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="a_f4" value="&lt;b&gt;Online-drift + cleanup + notebook&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;workload-pattern 4-week sim · docstrings&lt;br&gt;· simulator/ README · example notebook&lt;br&gt;· ruff clean · drift replayable with seed&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="a_f4" value="&lt;b&gt;Online-drift + cleanup + notebook&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;workload-pattern 4-week sim · docstrings&lt;br&gt;· simulator/ README · example notebook&lt;br&gt;· ruff clean · drift replayable with seed&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="1100" y="180" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="j_f1" value="&lt;b&gt;Resolve ADRs 000, 002, 003&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;MDP framing · reward composition · PPO path&lt;br&gt;· ADR 001 summary for Interim §3&lt;br&gt;· all 4 ADRs in decisions/&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="j_f1" value="&lt;b&gt;Resolve ADRs 000, 002, 003&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;MDP framing · reward composition · PPO path&lt;br&gt;· ADR 001 summary for Interim §3&lt;br&gt;· all 4 ADRs in decisions/&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="200" y="320" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="j_f2" value="&lt;b&gt;InfraRLEnv (gym) + bandit baseline&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;Discrete(18) + per-step mask (ADR 001)&lt;br&gt;· ε-greedy bandit implementation&lt;br&gt;· smoke test converges on 1 profile&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="j_f2" value="&lt;b&gt;InfraRLEnv (gym) + bandit baseline&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;Discrete(18) + per-step mask (ADR 001)&lt;br&gt;· ε-greedy bandit implementation&lt;br&gt;· smoke test converges on 1 profile&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="500" y="320" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="j_f3" value="&lt;b&gt;Tabular Q + DQN + PPO wiring&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;SB3 · 3-layer MLP · 128 hidden · target net&lt;br&gt;· Q + DQN beat random on 100 profiles&lt;br&gt;· PPO training loop stable&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="j_f3" value="&lt;b&gt;Tabular Q + DQN + PPO wiring&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;SB3 · 3-layer MLP · 128 hidden · target net&lt;br&gt;· Q + DQN beat random on 100 profiles&lt;br&gt;· PPO training loop stable&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="800" y="320" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="j_f4" value="&lt;b&gt;Contextual bandit + tune + 3-seed runs&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;ContextualBanditAdapter · ε schedule · DQN LR · PPO clip&lt;br&gt;· 3-seed mean ± std for all 4 algos&lt;br&gt;· models/ checkpoints saved&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="j_f4" value="&lt;b&gt;Contextual bandit + tune + 3-seed runs&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;ContextualBanditAdapter · ε schedule · DQN LR · PPO clip&lt;br&gt;· 3-seed mean ± std for all 4 algos&lt;br&gt;· models/ checkpoints saved&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="1100" y="320" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="v_f1" value="&lt;b&gt;Interim Report (5-6 pages)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;progress · issues · baseline + SoTA&lt;br&gt;· notional arch (HLD png) · frameworks&lt;br&gt;&lt;b style=&quot;color:#d63031&quot;&gt;· submitted Oct 26 at 17:00&lt;/b&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d63031;strokeWidth=1.5;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="v_f1" value="&lt;b&gt;Interim Report (5-6 pages)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;progress · issues · baseline + SoTA&lt;br&gt;· notional arch (HLD png) · frameworks&lt;br&gt;&lt;b style=&quot;color:#d63031&quot;&gt;· submitted Oct 26 at 17:00&lt;/b&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d63031;strokeWidth=1.5;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="200" y="460" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="v_f2" value="&lt;b&gt;experiments.run_experiment driver&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;algorithm-agnostic runner · logging shape&lt;br&gt;· drives bandit through runner&lt;br&gt;· CSV + first training-curve PNG&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="v_f2" value="&lt;b&gt;experiments.run_experiment driver&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;algorithm-agnostic runner · logging shape&lt;br&gt;· drives bandit through runner&lt;br&gt;· CSV + first training-curve PNG&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="500" y="460" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="v_f3" value="&lt;b&gt;Pareto + heatmap + 2 ablations&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;quality vs cost · per-use-case heatmap&lt;br&gt;· 2 of 4 ablations with numbers&lt;br&gt;· ablation plan locked and reviewed&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="v_f3" value="&lt;b&gt;Pareto + heatmap + 2 ablations&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;quality vs cost · per-use-case heatmap&lt;br&gt;· 2 of 4 ablations with numbers&lt;br&gt;· ablation plan locked and reviewed&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b2bec3;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="800" y="460" width="290" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="v_f4" value="&lt;b&gt;Demo + deck + Final Report&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;Streamlit app &amp;lt;10s cold · deck ≤15 slides&lt;br&gt;· remaining 2 ablations · drift plots&lt;br&gt;&lt;b style=&quot;color:#d63031&quot;&gt;· Final Report submitted Dec 7 at 23:59&lt;/b&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d63031;strokeWidth=1.5;fontSize=11;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
+                <mxCell id="v_f4" value="&lt;b&gt;Demo + deck + Final Report&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;Streamlit app &amp;lt;10s cold · deck ≤15 slides&lt;br&gt;· remaining 2 ablations · drift plots&lt;br&gt;&lt;b style=&quot;color:#d63031&quot;&gt;· Final Report submitted Dec 7 at 23:59&lt;/b&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d63031;strokeWidth=1.5;fontSize=13;fontColor=#2d3436;align=left;spacingLeft=12;spacingTop=8;arcSize=8;" parent="1" vertex="1">
                     <mxGeometry x="1100" y="460" width="290" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="cp_a_j" style="strokeWidth=1.5;strokeColor=#d63031;dashed=1;dashPattern=6 4;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="a_f1" target="j_f1" edge="1">
@@ -82,7 +82,7 @@
                 <mxCell id="cp_j_v" style="strokeWidth=1.5;strokeColor=#d63031;dashed=1;dashPattern=6 4;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="j_f1" target="v_f1" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="cp_label" value="&lt;i&gt;Interim deps&lt;/i&gt;" style="text;html=1;fontSize=9;align=center;fontColor=#d63031;" vertex="1" parent="1">
+                <mxCell id="cp_label" value="&lt;i&gt;Interim deps&lt;/i&gt;" style="text;html=1;fontSize=13;align=center;fontColor=#d63031;" vertex="1" parent="1">
                     <mxGeometry x="340" y="297" width="100" height="14" as="geometry"/>
                 </mxCell>
                 <mxCell id="gate_line" value="" style="strokeWidth=1;strokeColor=#dfe6e9;" edge="1" parent="1">
@@ -91,28 +91,28 @@
                         <mxPoint x="1390" y="592" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="g1" value="G1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d63031;strokeColor=#B02424;fontSize=10;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
+                <mxCell id="g1" value="G1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d63031;strokeColor=#B02424;fontSize=12;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="478" y="580" width="24" height="24" as="geometry"/>
                 </mxCell>
-                <mxCell id="g1_lbl" value="&lt;b&gt;Interim Report&lt;/b&gt;  &lt;span style=&quot;font-size:9px;color:#d63031&quot;&gt;EXTERNAL · 10 pts&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;course deliverable  ·  Oct 26 at 17:00&lt;/span&gt;" style="text;html=1;fontSize=10;align=center;fontColor=#2d3436;" vertex="1" parent="1">
+                <mxCell id="g1_lbl" value="&lt;b&gt;Interim Report&lt;/b&gt;  &lt;span style=&quot;font-size:9px;color:#d63031&quot;&gt;EXTERNAL · 10 pts&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;course deliverable  ·  Oct 26 at 17:00&lt;/span&gt;" style="text;html=1;fontSize=12;align=center;fontColor=#2d3436;" vertex="1" parent="1">
                     <mxGeometry x="360" y="614" width="260" height="34" as="geometry"/>
                 </mxCell>
-                <mxCell id="g2" value="G2" style="rhombus;whiteSpace=wrap;html=1;fillColor=#D4A017;strokeColor=#A17F13;fontSize=10;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
+                <mxCell id="g2" value="G2" style="rhombus;whiteSpace=wrap;html=1;fillColor=#D4A017;strokeColor=#A17F13;fontSize=12;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="778" y="580" width="24" height="24" as="geometry"/>
                 </mxCell>
-                <mxCell id="g2_lbl" value="&lt;b&gt;Vertical slice green&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;internal  ·  Nov 9&lt;/span&gt;" style="text;html=1;fontSize=10;align=center;fontColor=#2d3436;" vertex="1" parent="1">
+                <mxCell id="g2_lbl" value="&lt;b&gt;Vertical slice green&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;internal  ·  Nov 9&lt;/span&gt;" style="text;html=1;fontSize=12;align=center;fontColor=#2d3436;" vertex="1" parent="1">
                     <mxGeometry x="680" y="614" width="220" height="34" as="geometry"/>
                 </mxCell>
-                <mxCell id="g3" value="G3" style="rhombus;whiteSpace=wrap;html=1;fillColor=#D4A017;strokeColor=#A17F13;fontSize=10;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
+                <mxCell id="g3" value="G3" style="rhombus;whiteSpace=wrap;html=1;fillColor=#D4A017;strokeColor=#A17F13;fontSize=12;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="1078" y="580" width="24" height="24" as="geometry"/>
                 </mxCell>
-                <mxCell id="g3_lbl" value="&lt;b&gt;Deep baseline + 2 ablations&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;internal  ·  Nov 23&lt;/span&gt;" style="text;html=1;fontSize=10;align=center;fontColor=#2d3436;" vertex="1" parent="1">
+                <mxCell id="g3_lbl" value="&lt;b&gt;Deep baseline + 2 ablations&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;internal  ·  Nov 23&lt;/span&gt;" style="text;html=1;fontSize=12;align=center;fontColor=#2d3436;" vertex="1" parent="1">
                     <mxGeometry x="960" y="614" width="260" height="34" as="geometry"/>
                 </mxCell>
-                <mxCell id="g4" value="G4" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d63031;strokeColor=#B02424;fontSize=10;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
+                <mxCell id="g4" value="G4" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d63031;strokeColor=#B02424;fontSize=12;fontStyle=1;fontColor=#ffffff;" parent="1" vertex="1">
                     <mxGeometry x="1378" y="580" width="24" height="24" as="geometry"/>
                 </mxCell>
-                <mxCell id="g4_lbl" value="&lt;b&gt;Final Report + Presentation&lt;/b&gt;  &lt;span style=&quot;font-size:9px;color:#d63031&quot;&gt;EXT · 35 pts&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;report due Dec 7 at 23:59&lt;/span&gt;" style="text;html=1;fontSize=10;align=center;fontColor=#2d3436;" vertex="1" parent="1">
+                <mxCell id="g4_lbl" value="&lt;b&gt;Final Report + Presentation&lt;/b&gt;  &lt;span style=&quot;font-size:9px;color:#d63031&quot;&gt;EXT · 35 pts&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;font-weight:normal;color:#636e72&quot;&gt;report due Dec 7 at 23:59&lt;/span&gt;" style="text;html=1;fontSize=12;align=center;fontColor=#2d3436;" vertex="1" parent="1">
                     <mxGeometry x="1220" y="614" width="280" height="34" as="geometry"/>
                 </mxCell>
                 <mxCell id="legend_cp" value="" style="strokeWidth=1.5;strokeColor=#d63031;dashed=1;dashPattern=6 4;endArrow=none;" edge="1" parent="1">
@@ -121,31 +121,31 @@
                         <mxPoint x="70" y="712" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="legend_cp_lbl" value="Interim dependency" style="text;html=1;fontSize=9;align=left;fontColor=#636e72;" vertex="1" parent="1">
+                <mxCell id="legend_cp_lbl" value="Interim dependency" style="text;html=1;fontSize=13;align=left;fontColor=#636e72;" vertex="1" parent="1">
                     <mxGeometry x="76" y="704" width="140" height="15" as="geometry"/>
                 </mxCell>
                 <mxCell id="legend_int" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#D4A017;strokeColor=#A17F13;" vertex="1" parent="1">
                     <mxGeometry x="220" y="705" width="14" height="14" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend_int_lbl" value="internal gate" style="text;html=1;fontSize=9;align=left;fontColor=#636e72;" vertex="1" parent="1">
+                <mxCell id="legend_int_lbl" value="internal gate" style="text;html=1;fontSize=13;align=left;fontColor=#636e72;" vertex="1" parent="1">
                     <mxGeometry x="240" y="704" width="90" height="15" as="geometry"/>
                 </mxCell>
                 <mxCell id="legend_ext" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d63031;strokeColor=#B02424;" vertex="1" parent="1">
                     <mxGeometry x="330" y="705" width="14" height="14" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend_ext_lbl" value="external deliverable (committee visible)" style="text;html=1;fontSize=9;align=left;fontColor=#636e72;" vertex="1" parent="1">
+                <mxCell id="legend_ext_lbl" value="external deliverable (committee visible)" style="text;html=1;fontSize=13;align=left;fontColor=#636e72;" vertex="1" parent="1">
                     <mxGeometry x="350" y="704" width="300" height="15" as="geometry"/>
                 </mxCell>
                 <mxCell id="legend_now" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9e7;strokeColor=#fcd34d;" vertex="1" parent="1">
                     <mxGeometry x="660" y="705" width="14" height="14" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend_now_lbl" value="current fortnight" style="text;html=1;fontSize=9;align=left;fontColor=#636e72;" vertex="1" parent="1">
+                <mxCell id="legend_now_lbl" value="current fortnight" style="text;html=1;fontSize=13;align=left;fontColor=#636e72;" vertex="1" parent="1">
                     <mxGeometry x="680" y="704" width="120" height="15" as="geometry"/>
                 </mxCell>
                 <mxCell id="legend_thx" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff5f5;strokeColor=#fecaca;" vertex="1" parent="1">
                     <mxGeometry x="800" y="705" width="14" height="14" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend_thx_lbl" value="Thanksgiving week (reduced capacity)" style="text;html=1;fontSize=9;align=left;fontColor=#636e72;" vertex="1" parent="1">
+                <mxCell id="legend_thx_lbl" value="Thanksgiving week (reduced capacity)" style="text;html=1;fontSize=13;align=left;fontColor=#636e72;" vertex="1" parent="1">
                     <mxGeometry x="820" y="704" width="300" height="15" as="geometry"/>
                 </mxCell>
             </root>
