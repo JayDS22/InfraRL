@@ -20,10 +20,12 @@
 
 set -euo pipefail
 
-module purge
-module load anaconda3
-source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate "${INFRARL_ENV:-infrarl}"
+CONDA_HOME="${CONDA_HOME:-$HOME/miniforge3}"
+ENV_NAME="${INFRARL_ENV:-infrarl}"
+
+# shellcheck disable=SC1091
+source "$CONDA_HOME/etc/profile.d/conda.sh"
+conda activate "$ENV_NAME"
 
 # single-node BLAS/torch threading
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
@@ -32,7 +34,7 @@ export OPENBLAS_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
 export TOKENIZERS_PARALLELISM=false
 
 mkdir -p logs results
-echo "[run] host=$(hostname) env=$CONDA_DEFAULT_ENV cpus=$SLURM_CPUS_PER_TASK"
+echo "[run] host=$(hostname) env=$CONDA_DEFAULT_ENV cpus=${SLURM_CPUS_PER_TASK:-1}"
 echo "[run] git sha=$(git rev-parse --short HEAD 2>/dev/null || echo none)"
 python -m infrarl.evaluation.run_experiment --seeds 3 --ablate ppo --out results
 echo "[run] done at $(date)"
