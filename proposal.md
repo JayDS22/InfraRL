@@ -99,13 +99,18 @@ After the initial recommendation is deployed, a contextual bandit monitors real 
 
 ## 5. Metrics for Validation and Verification
 
-We evaluate on 1000 randomly generated customer profiles across 6 use case types.
+We evaluate on 1000 randomly generated customer profiles across 6 use case types, with per-profile accuracy requirements `acc_req ~ Uniform(0.60, 0.90)`.
 
-**Primary metrics:**
-- **Recommendation quality:** average simulated task accuracy of the recommended stack (target: > 0.85)
-- **Budget compliance rate:** percentage of recommendations within the customer's budget (target: > 90%)
-- **SLA compliance rate:** percentage of recommendations meeting latency SLA (target: > 90%)
-- **Cost efficiency:** average percentage of budget saved while meeting quality and SLA targets
+**Primary metrics (operational):**
+- **Quality compliance rate:** fraction of profiles where the recommended stack's simulated quality meets the profile's `acc_req` (target: >= 0.85). A single global average-quality threshold is ill-posed against a per-profile requirement: an agent that exactly satisfies each `acc_req` lands at average quality = mean(`acc_req`) ~ 0.75. Under the current profile distribution, the brute-force single-tier oracle satisfies all three constraints jointly on 83.7 percent of profiles, so a quality-only target of 0.85 is a reachable stretch.
+- **Budget compliance rate:** fraction of recommendations within the customer's monthly budget (target: >= 0.90).
+- **SLA compliance rate:** fraction of recommendations meeting the latency SLA (target: >= 0.90).
+- **Joint compliance rate (`meets_all`):** fraction meeting all three constraints simultaneously (target: >= 0.75; oracle ceiling 0.837 under the current profile distribution).
+
+**Secondary metrics (informational, no numeric target):**
+- **Quality attainment:** mean of `min(quality / acc_req, 1)` across profiles. Rewards closeness to each profile's requirement without penalizing over-delivery.
+- **Average raw quality:** mean simulated quality. Reported alongside mean(`acc_req`) ~ 0.75 as a sanity check, not held to a target.
+- **Cost efficiency:** mean budget headroom on profiles where all three compliance constraints are met.
 
 **Comparative evaluation:**
 - RL agents vs random baseline, heuristic rule-based system, and each other
