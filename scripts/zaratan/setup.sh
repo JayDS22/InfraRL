@@ -17,10 +17,11 @@ MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download
 
 if ! command -v conda >/dev/null 2>&1 && [ ! -d "$CONDA_HOME" ]; then
   echo "[setup] no conda found, installing miniforge to $CONDA_HOME"
-  tmp="$(mktemp)"
-  curl -fsSL -o "$tmp" "$MINIFORGE_URL"
-  bash "$tmp" -b -p "$CONDA_HOME"
-  rm -f "$tmp"
+  # miniforge installer checks that $0 ends in .sh, so the temp file must too
+  installer="$HOME/miniforge_installer.sh"
+  curl -fsSL -o "$installer" "$MINIFORGE_URL"
+  bash "$installer" -b -p "$CONDA_HOME"
+  rm -f "$installer"
 fi
 
 # shellcheck disable=SC1091

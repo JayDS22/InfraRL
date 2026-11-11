@@ -12,6 +12,10 @@ Episode: arch, then (hardware, model, precision) per tier, then scaling.
 Length = 3 * tier_count + 2. Reward is terminal only:
 
     r_T = 0.5 * Q_r + 0.3 * B_r + 0.2 * S_r
+
+where Q_r = clip(q / acc_req, 0, 1) + 0.3 * I[q >= acc_req] (flat compliance
+bonus added v2 after the interim: the clipped-ratio-only form was
+quality-lenient and let agents trade quality for cost).
 """
 from __future__ import annotations
 
@@ -53,13 +57,14 @@ def episode_length(tier_count: int) -> int:
 
 
 def max_reward() -> float:
-    """Maximum reachable terminal reward (quality clipped to 1, cost 0, latency 0)."""
+    """Maximum reachable terminal reward (quality clipped + compliance bonus, cost 0, latency 0)."""
     wq, wb, ws = REWARD_WEIGHTS
-    return wq * 1.0 + wb * 1.1 + ws * 1.0  # B_r caps at 1 + 0.1 savings bonus
+    return wq * 1.3 + wb * 1.1 + ws * 1.0  # Q_r cap 1.0 + 0.3 compliance, B_r cap 1.0 + 0.1 savings
 
 
 def terminal_reward(q: float, latency_ms: float, cost: float, profile: Profile) -> tuple[float, dict]:
-    q_r = float(np.clip(q / profile.acc_req, 0.0, 1.0))
+    meets_quality = q >= profile.acc_req
+    q_r = float(np.clip(q / profile.acc_req, 0.0, 1.0)) + 0.3 * float(meets_quality)
     b = profile.monthly_budget_usd
     within_budget = cost <= b
     b_r = float(within_budget) + 0.1 * max(0.0, (b - cost) / b)
@@ -67,7 +72,8 @@ def terminal_reward(q: float, latency_ms: float, cost: float, profile: Profile) 
     s_r = float(meets_sla)
     wq, wb, ws = REWARD_WEIGHTS
     reward = wq * q_r + wb * b_r + ws * s_r
-    return reward, {"q_r": q_r, "b_r": b_r, "s_r": s_r, "within_budget": within_budget, "meets_sla": meets_sla}
+    return reward, {"q_r": q_r, "b_r": b_r, "s_r": s_r,
+                    "within_budget": within_budget, "meets_sla": meets_sla, "meets_quality": meets_quality}
 
 
 def encode_profile(p: Profile) -> np.ndarray:

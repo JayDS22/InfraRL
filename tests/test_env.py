@@ -68,6 +68,6 @@ def test_action_space_size():
 def test_terminal_reward_formula():
     p = generate_profiles(1, 0)[0]
     r, parts = terminal_reward(p.acc_req, p.latency_sla_ms, p.monthly_budget_usd, p)
-    assert abs(r - (0.5 + 0.3 + 0.2)) < 1e-9
+    assert abs(r - (0.5 * 1.3 + 0.3 + 0.2)) < 1e-9  # meets quality -> Q_r = 1.3
     r2, _ = terminal_reward(p.acc_req * 2, 0.0, 0.0, p)
     assert abs(r2 - max_reward()) < 1e-9
