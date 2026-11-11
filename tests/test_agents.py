@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from infrarl.agents.base import Agent
 from infrarl.agents.bandit import ContextFreeBandit, ContextualBandit
@@ -8,7 +9,16 @@ from infrarl.evaluation.experiments import evaluate, run_episode, summarize
 from infrarl.simulator.environment import InfraEnv
 from infrarl.simulator.profiles import generate_profiles
 
+try:
+    from infrarl.agents.ppo_agent import PPOAgent
+    _HAS_TORCH = True
+except ImportError:
+    _HAS_TORCH = False
+
 ALL = [lambda: RandomAgent(0), HeuristicAgent, lambda: ContextFreeBandit(seed=0), lambda: ContextualBandit(seed=0)]
+if _HAS_TORCH:
+    # rollout_size large enough that the 60-profile protocol test never triggers _learn
+    ALL.append(lambda: PPOAgent(seed=0, rollout_size=10_000))
 
 
 def test_agents_satisfy_protocol_and_only_play_legal_actions():
@@ -35,3 +45,21 @@ def test_bandit_learns():
     r = summarize(evaluate(env, RandomAgent(0), profiles))
     b = summarize(evaluate(env, ContextFreeBandit(seed=0), profiles, train_epochs=5))
     assert b["mean_reward"] > r["mean_reward"]
+
+
+@pytest.mark.skipif(not _HAS_TORCH, reason="torch not installed")
+def test_ppo_learns():
+    # small rollout so _learn fires during training, 4 epochs over 150 profiles
+    profiles = generate_profiles(150, 11)
+    env = InfraEnv(profiles)
+    r = summarize(evaluate(env, RandomAgent(0), profiles))
+    p = summarize(evaluate(env, PPOAgent(seed=0, rollout_size=256), profiles, train_epochs=4))
+    assert p["mean_reward"] > r["mean_reward"]
+
+
+@pytest.mark.skipif(not _HAS_TORCH, reason="torch not installed")
+def test_ppo_auto_registered():
+    from infrarl.agents.registry import REGISTRY
+    assert "ppo" in REGISTRY
+    spec = REGISTRY["ppo"]
+    assert spec.train_epochs > 0 and callable(spec.factory)
