@@ -182,14 +182,15 @@ def check_simulator(n_profiles: int = 300, seed: int = 0) -> dict:
 
 def check_reward() -> dict:
     p = Profile("chatbot", 1e6, 500, 0.8, 1000, "low", 2.0, 100, 100, 10)
+    # Q_r = clip(q/acc_req, 0, 1) + 0.3*I[q>=acc_req], so meeting acc_req -> Q_r = 1.3
     cases = [
         # (quality, latency, cost) -> expected reward
-        ((0.8, 500, 1000), 0.5 * 1.0 + 0.3 * 1.0 + 0.2 * 1.0),            # all boundaries inclusive
-        ((0.8, 500, 1000.01), 0.5 + 0.0 + 0.2),                            # just over budget: B_r = 0
-        ((0.8, 500.01, 1000), 0.5 + 0.3 + 0.0),                            # just over SLA: S_r = 0
-        ((0.4, 500, 1000), 0.25 + 0.3 + 0.2),                              # half the required quality
-        ((1.6, 0.0, 0.0), 0.5 + 0.3 * 1.1 + 0.2),                          # quality clipped, full savings bonus
-        ((0.0, 1e9, 1e9), 0.0),                                           # worst case
+        ((0.8, 500, 1000), 0.5 * 1.3 + 0.3 * 1.0 + 0.2 * 1.0),             # boundary: meets quality (Q_r=1.3), budget, SLA
+        ((0.8, 500, 1000.01), 0.5 * 1.3 + 0.0 + 0.2 * 1.0),                # over budget
+        ((0.8, 500.01, 1000), 0.5 * 1.3 + 0.3 * 1.0 + 0.0),                # over SLA
+        ((0.4, 500, 1000), 0.5 * 0.5 + 0.3 * 1.0 + 0.2 * 1.0),             # half quality, no compliance bonus
+        ((1.6, 0.0, 0.0), 0.5 * 1.3 + 0.3 * 1.1 + 0.2 * 1.0),              # quality clipped + bonus, full savings
+        ((0.0, 1e9, 1e9), 0.0),                                             # worst case
     ]
     fails = 0
     for (q, l, c), expected in cases:
