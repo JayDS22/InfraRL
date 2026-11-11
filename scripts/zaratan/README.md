@@ -35,6 +35,6 @@ bash scripts/zaratan/sync.sh pull     # remote results/ -> local results/
 
 `sync.sh` excludes `.git`, caches, `results/`, `logs/`, and `.claude/`. The `--delete` flag on push means Zaratan mirrors local exactly, so remove orphan files there.
 
-## Why conda, not module load
+## Why miniforge, not module load
 
-Zaratan's `module load python/3.11` may or may not exist on your allocation, and the system Python is 3.10 which breaks the pins. A user-space conda env is the one-liner that always works, with no coordination with HPC ops.
+Zaratan ships no `anaconda3`, `miniconda`, or `mamba` module; its only Python module is 3.10, which breaks our pins (numpy 2.5, scipy 1.18, pandas 3.0 need Python >= 3.11). `setup.sh` auto-installs miniforge in `$HOME/miniforge3` on first run, then builds a conda env at Python 3.11. One-time, user-space, no HPC-ops coordination.
