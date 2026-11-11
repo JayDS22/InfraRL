@@ -30,8 +30,8 @@ source "$CONDA_HOME/etc/profile.d/conda.sh"
 if conda env list | awk '{print $1}' | grep -qx "$ENV_NAME"; then
   echo "[setup] conda env '$ENV_NAME' already exists, reusing"
 else
-  echo "[setup] creating conda env '$ENV_NAME' with Python 3.11"
-  conda create -n "$ENV_NAME" python=3.11 pip -y
+  echo "[setup] creating conda env '$ENV_NAME' with Python 3.12"
+  conda create -n "$ENV_NAME" python=3.12 pip -y
 fi
 
 conda activate "$ENV_NAME"
