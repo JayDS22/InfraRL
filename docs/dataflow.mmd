@@ -34,7 +34,7 @@ flowchart TB
     QLC["(Q, L_ms, cost_$/mo)"]:::sim
 
     SIM --> HW --> MQ --> CFG --> QLC
-    QLC --> RW["reward.compose<br/>0.4·Q + 0.3·B + 0.2·S + 0.1·E"]:::reward
+    QLC --> RW["reward.compose<br/>0.5·Q_r + 0.3·B_r + 0.2·S_r"]:::reward
     RW -.->|r_T + breakdown| UP
 
     UP -.->|per episode| LOG["experiments.log_episode<br/>CSV · metrics"]:::out
