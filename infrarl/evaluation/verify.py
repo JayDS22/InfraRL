@@ -29,9 +29,11 @@ import numpy as np
 from ..agents.bandit import ContextualBandit
 from ..agents.heuristic import HeuristicAgent
 from ..simulator.environment import (
-    N_ACTIONS, InfraEnv, episode_length, terminal_reward,
+    ARCH_RANGE, N_ACTIONS, REWARD_WEIGHTS, InfraEnv, episode_length, max_reward, terminal_reward,
 )
-from ..simulator.estimator import SCALING_POLICIES, Stack, Tier, estimate, is_feasible
+from ..simulator.estimator import (
+    SCALING_POLICIES, Stack, Tier, estimate, is_feasible, tier_quality, tokens_per_sec,
+)
 from ..simulator.hardware import HARDWARE, HARDWARE_NAMES
 from ..simulator.models import MODEL_NAMES, PRECISION_NAMES, min_memory_gb
 from ..simulator.profiles import Profile, generate_profiles
@@ -74,7 +76,7 @@ def check_masks(n_three_tier_samples: int = 20000, seed: int = 0) -> dict:
                 except ValueError:
                     pass
                 continue
-            if depth == 0 and a - 0 + 1 > 2:  # exhaustive DFS only for 1- and 2-tier stacks
+            if depth == 0 and a - ARCH_RANGE.start >= 2:  # exhaustive DFS only for 1- and 2-tier stacks
                 continue
             try:
                 _, r, term, _, info = e.step(a)
@@ -106,7 +108,6 @@ def check_masks(n_three_tier_samples: int = 20000, seed: int = 0) -> dict:
     env = _one_profile_env()
     three = bad = 0
     for _ in range(n_three_tier_samples):
-        env.reset()
         _, info = env.reset()
         env.step(2)  # three-tier architecture
         steps = 1
@@ -151,14 +152,12 @@ def check_simulator(n_profiles: int = 300, seed: int = 0) -> dict:
         # per-request latency decreases with faster hardware at fixed model/precision (static, ignoring queueing)
         for m, pr in itertools.product(MODEL_NAMES, PRECISION_NAMES):
             ts = [Tier(h, m, pr) for h in speed_order if is_feasible(Tier(h, m, pr))]
-            from ..simulator.estimator import tokens_per_sec
             tps = [tokens_per_sec(t) for t in ts]
             checked["latency_vs_hardware"] += 1
             fails["latency_vs_hardware"] += not all(a < b for a, b in zip(tps, tps[1:]))
         # lower precision is faster and never higher quality
         for h, m in itertools.product(HARDWARE_NAMES, MODEL_NAMES):
             ts = [Tier(h, m, pr) for pr in PRECISION_NAMES if is_feasible(Tier(h, m, pr))]
-            from ..simulator.estimator import tokens_per_sec, tier_quality
             sp = [tokens_per_sec(t) for t in ts]  # int4 .. fp32 : decreasing speed
             checked["latency_vs_precision"] += 1
             fails["latency_vs_precision"] += not all(a > b for a, b in zip(sp, sp[1:]))
@@ -196,7 +195,7 @@ def check_reward() -> dict:
     for (q, l, c), expected in cases:
         r, _ = terminal_reward(q, l, c, p)
         fails += abs(r - expected) > 1e-9
-    return {"checked": len(cases), "n_failed": int(fails), "max_reward": 1.03}
+    return {"checked": len(cases), "n_failed": int(fails), "max_reward": max_reward()}
 
 
 def check_determinism(seed: int = 0) -> dict:

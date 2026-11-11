@@ -31,8 +31,9 @@ def compare_agents(df: pd.DataFrame, metric: str = "reward") -> pd.DataFrame:
         agents = list(wide.columns)
         if len(agents) >= 3:
             chi2, p = stats.friedmanchisquare(*[wide[a].values for a in agents])
+            # Friedman is a single global test; no family correction applies.
             rows.append(dict(seed=seed, metric=metric, test="friedman", a="*", b="*",
-                             statistic=chi2, p_raw=p, p_holm=p, mean_diff=np.nan))
+                             statistic=chi2, p_raw=p, p_holm=np.nan, mean_diff=np.nan))
         pairs = list(itertools.combinations(agents, 2))
         raw, recs = [], []
         for a, b in pairs:
