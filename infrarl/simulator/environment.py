@@ -52,6 +52,12 @@ def episode_length(tier_count: int) -> int:
     return 3 * tier_count + 2
 
 
+def max_reward() -> float:
+    """Maximum reachable terminal reward (quality clipped to 1, cost 0, latency 0)."""
+    wq, wb, ws = REWARD_WEIGHTS
+    return wq * 1.0 + wb * 1.1 + ws * 1.0  # B_r caps at 1 + 0.1 savings bonus
+
+
 def terminal_reward(q: float, latency_ms: float, cost: float, profile: Profile) -> tuple[float, dict]:
     q_r = float(np.clip(q / profile.acc_req, 0.0, 1.0))
     b = profile.monthly_budget_usd
@@ -91,7 +97,10 @@ class InfraEnv(gym.Env):
         super().__init__()
         self.profiles = profiles if profiles is not None else generate_profiles(1000, seed)
         self.action_space = spaces.Discrete(N_ACTIONS)
-        self.observation_space = spaces.Box(0.0, 1.5, shape=(OBS_DIM,), dtype=np.float32)
+        # obs features are log-normalized with divisors tuned to the current profile
+        # generator ranges; a tight Box bound would silently drift if Anupama retunes
+        # the distribution, so declare unbounded and let downstream code normalize.
+        self.observation_space = spaces.Box(-np.inf, np.inf, shape=(OBS_DIM,), dtype=np.float32)
         self._rng = np.random.default_rng(seed)
         self.profile: Profile | None = None
         self._profile_vec = np.zeros(N_PROFILE_FEATURES, dtype=np.float32)

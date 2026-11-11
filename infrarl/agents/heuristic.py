@@ -28,6 +28,7 @@ def plan(profile) -> list[int]:
         if hw is not None or idx == 0:
             break
         idx -= 1
+    assert hw is not None, f"no GPU in {_GPUS} fits any model at fp16 for use_case={profile.use_case}"
     return [
         ARCH_RANGE.start,
         HW_RANGE.start + HARDWARE_NAMES.index(hw),

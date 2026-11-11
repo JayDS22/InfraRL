@@ -1,7 +1,7 @@
 import numpy as np
 
 from infrarl.simulator.environment import (
-    N_ACTIONS, OBS_DIM, InfraEnv, episode_length, terminal_reward,
+    N_ACTIONS, OBS_DIM, InfraEnv, episode_length, max_reward, terminal_reward,
 )
 from infrarl.simulator.profiles import generate_profiles
 
@@ -38,7 +38,7 @@ def test_reward_is_terminal_only_and_bounded():
             if not term:
                 assert r == 0.0
             else:
-                assert 0.0 <= r <= 1.03 + 1e-9
+                assert 0.0 <= r <= max_reward() + 1e-9
                 break
 
 
@@ -70,4 +70,4 @@ def test_terminal_reward_formula():
     r, parts = terminal_reward(p.acc_req, p.latency_sla_ms, p.monthly_budget_usd, p)
     assert abs(r - (0.5 + 0.3 + 0.2)) < 1e-9
     r2, _ = terminal_reward(p.acc_req * 2, 0.0, 0.0, p)
-    assert abs(r2 - 1.03) < 1e-9
+    assert abs(r2 - max_reward()) < 1e-9
