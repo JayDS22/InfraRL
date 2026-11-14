@@ -94,6 +94,34 @@ def plot_compliance(summary: pd.DataFrame, path: str) -> None:
     _save(fig, path)
 
 
+def plot_drift(results: list, path: str, pre_drift_weeks: int = 1) -> None:
+    """Weekly mean reward for static vs online bandit under workload drift.
+
+    `results` is a list of DriftResult objects (one per seed). Draws seed-mean
+    lines with ±std bands and a vertical marker at drift onset.
+    """
+    weeks = np.unique(results[0].week)
+    static_mat = np.array([r.weekly("static") for r in results])
+    online_mat = np.array([r.weekly("online") for r in results])
+    fig, ax = plt.subplots(figsize=(6.5, 4.2))
+    ax.plot(weeks, static_mat.mean(0), "-o", color="tab:gray", label="static (frozen after pretrain)")
+    ax.fill_between(weeks, static_mat.mean(0) - static_mat.std(0), static_mat.mean(0) + static_mat.std(0),
+                    color="tab:gray", alpha=0.15)
+    ax.plot(weeks, online_mat.mean(0), "-o", color="tab:blue", label="online (keeps learning)")
+    ax.fill_between(weeks, online_mat.mean(0) - online_mat.std(0), online_mat.mean(0) + online_mat.std(0),
+                    color="tab:blue", alpha=0.15)
+    if pre_drift_weeks < len(weeks):
+        ax.axvline(pre_drift_weeks - 0.5, color="red", ls="--", lw=1)
+        ax.text(pre_drift_weeks - 0.4, ax.get_ylim()[0], "drift onset", color="red",
+                fontsize=8, va="bottom")
+    ax.set_xlabel("week")
+    ax.set_ylabel("mean terminal reward")
+    ax.set_title("Workload drift: static vs online contextual bandit")
+    ax.set_xticks(weeks)
+    ax.legend(fontsize=8)
+    _save(fig, path)
+
+
 def plot_ablation(abl: pd.DataFrame, path: str) -> None:
     metrics = ["mean_cost_usd", "quality_compliance", "sla_compliance", "budget_compliance"]
     g = abl.groupby("variant")[metrics].mean()
