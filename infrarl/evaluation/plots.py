@@ -83,7 +83,9 @@ def plot_compliance(summary: pd.DataFrame, path: str) -> None:
     for k, c in enumerate(cols):
         ax.bar(x + k * w, g[(c, "mean")], w, yerr=g[(c, "std")], capsize=2, label=c.replace("_", " "))
     ax.axhline(0.9, color="red", ls=":", lw=1)
-    ax.text(len(g.index) - 0.5, 0.91, "90% target", color="red", fontsize=7, ha="right")
+    ax.text(len(g.index) - 0.5, 0.91, "90% target (budget/SLA)", color="red", fontsize=7, ha="right")
+    ax.axhline(0.85, color="darkorange", ls=":", lw=1)
+    ax.text(len(g.index) - 0.5, 0.86, "85% target (quality compliance)", color="darkorange", fontsize=7, ha="right")
     ax.set_xticks(x + w * (len(cols) - 1) / 2, g.index, rotation=20, ha="right", fontsize=8)
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("fraction of held-out profiles")
