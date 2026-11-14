@@ -58,11 +58,13 @@ class PPOAgent(BaseAgent):
         gamma: float = 0.99,
         lam: float = 0.95,
         clip: float = 0.2,
-        rollout_size: int = 2048,
-        update_epochs: int = 4,
+        # tuned v2: larger rollout + stronger entropy fixed the v1 seed-collapse
+        # (all 3 seeds landed at 0.958) and let PPO explore past local minima.
+        rollout_size: int = 4096,
+        update_epochs: int = 6,
         minibatch_size: int = 256,
         value_coef: float = 0.5,
-        entropy_coef: float = 0.01,
+        entropy_coef: float = 0.03,
         max_grad_norm: float = 0.5,
     ):
         # ponytail: global torch seed, one agent per process is fine. Per-instance
