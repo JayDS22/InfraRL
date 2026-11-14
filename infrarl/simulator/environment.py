@@ -62,7 +62,8 @@ def max_reward() -> float:
     return wq * 1.3 + wb * 1.1 + ws * 1.0  # Q_r cap 1.0 + 0.3 compliance, B_r cap 1.0 + 0.1 savings
 
 
-def terminal_reward(q: float, latency_ms: float, cost: float, profile: Profile) -> tuple[float, dict]:
+def terminal_reward(q: float, latency_ms: float, cost: float, profile: Profile,
+                    weights: tuple[float, float, float] | None = None) -> tuple[float, dict]:
     meets_quality = q >= profile.acc_req
     q_r = float(np.clip(q / profile.acc_req, 0.0, 1.0)) + 0.3 * float(meets_quality)
     b = profile.monthly_budget_usd
@@ -70,7 +71,7 @@ def terminal_reward(q: float, latency_ms: float, cost: float, profile: Profile) 
     b_r = float(within_budget) + 0.1 * max(0.0, (b - cost) / b)
     meets_sla = latency_ms <= profile.latency_sla_ms
     s_r = float(meets_sla)
-    wq, wb, ws = REWARD_WEIGHTS
+    wq, wb, ws = weights if weights is not None else REWARD_WEIGHTS
     reward = wq * q_r + wb * b_r + ws * s_r
     return reward, {"q_r": q_r, "b_r": b_r, "s_r": s_r,
                     "within_budget": within_budget, "meets_sla": meets_sla, "meets_quality": meets_quality}
@@ -110,6 +111,10 @@ class InfraEnv(gym.Env):
         self._rng = np.random.default_rng(seed)
         self.profile: Profile | None = None
         self._profile_vec = np.zeros(N_PROFILE_FEATURES, dtype=np.float32)
+        # Optional per-episode reward-weight override (None -> use module REWARD_WEIGHTS).
+        # Set externally by drift experiments that want to simulate shifting customer
+        # priorities mid-stream (reward drift) alongside profile drift.
+        self.reward_weights_override: tuple[float, float, float] | None = None
         self._reset_episode_state()
 
     # ---- episode state -------------------------------------------------
@@ -170,7 +175,7 @@ class InfraEnv(gym.Env):
             self._done = True
             stack = self.stack()
             q, lat, cost = estimate(stack, self.profile)
-            reward, parts = terminal_reward(q, lat, cost, self.profile)
+            reward, parts = terminal_reward(q, lat, cost, self.profile, self.reward_weights_override)
             info = {"stack": stack, "quality": q, "latency_ms": lat, "cost_usd": cost, **parts}
         info["action_mask"] = self.action_masks()
         return self._obs(), reward, terminated, False, info

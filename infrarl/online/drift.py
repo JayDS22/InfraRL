@@ -34,6 +34,15 @@ _SHIFTED_ACC_REQ = (0.75, 0.95)       # later-week acc_req pulled toward the har
 _BASE_BUDGET = (1_000.0, 30_000.0)
 _SHIFTED_BUDGET = (500.0, 15_000.0)   # half the money, same workload
 
+# Reward-weight drift: simulates a FinOps-driven reprioritization mid-stream, where
+# customer priorities shift from quality-first to cost-first. Piecewise-stationary
+# bandit regime (Garivier & Moulines 2011). Pre-drift uses standard weights, drifted
+# weeks use cost-focused weights. The pretrained bandit cannot observe the new
+# weights directly; online updates must re-estimate per-arm value under the new
+# scalarization.
+_BASE_REWARD_WEIGHTS = (0.5, 0.3, 0.2)
+_SHIFTED_REWARD_WEIGHTS = (0.3, 0.5, 0.2)  # quality down, budget up
+
 
 def drift_mix(weeks: int, pre_drift_weeks: int = 1) -> np.ndarray:
     """Per-week probability mass over USE_CASES.
@@ -135,11 +144,30 @@ class DriftResult:
         return np.array([r[self.week == w].mean() for w in np.unique(self.week)])
 
 
+def _reward_weights_per_week(weeks: int, pre_drift_weeks: int,
+                             drift_reward: bool) -> list[tuple[float, float, float]]:
+    """Per-week reward weight schedule. Linear interpolation from BASE to SHIFTED
+    after pre_drift_weeks, matching the use-case / acc_req / budget interpolation."""
+    schedule = []
+    for w in range(weeks):
+        if not drift_reward or w < pre_drift_weeks:
+            schedule.append(_BASE_REWARD_WEIGHTS)
+        else:
+            drift = (weeks - 1 - pre_drift_weeks)
+            alpha = min(1.0, (w - pre_drift_weeks + 1) / max(1, drift))
+            schedule.append(tuple(
+                (1 - alpha) * b + alpha * s
+                for b, s in zip(_BASE_REWARD_WEIGHTS, _SHIFTED_REWARD_WEIGHTS)
+            ))
+    return schedule
+
+
 def run_drift_experiment(agent_factory, pretrain_profiles: list[Profile],
                          weeks: int = 4, per_week: int = 250,
                          pre_drift_weeks: int = 1, seed: int = 0,
                          drift_acc_req: bool = False,
-                         drift_budget: bool = False) -> DriftResult:
+                         drift_budget: bool = False,
+                         drift_reward: bool = False) -> DriftResult:
     """Train one agent on pretrain_profiles, then clone it: one copy runs frozen
     (static), the other keeps updating on the drift stream (online)."""
     from ..evaluation.experiments import train
@@ -153,6 +181,7 @@ def run_drift_experiment(agent_factory, pretrain_profiles: list[Profile],
                                              seed=seed + 100,
                                              drift_acc_req=drift_acc_req,
                                              drift_budget=drift_budget)
+    reward_schedule = _reward_weights_per_week(weeks, pre_drift_weeks, drift_reward)
     static_agent = copy.deepcopy(base_agent)
     online_agent = copy.deepcopy(base_agent)
 
@@ -160,8 +189,10 @@ def run_drift_experiment(agent_factory, pretrain_profiles: list[Profile],
     rewards_s = np.zeros(len(stream))
     rewards_o = np.zeros(len(stream))
     for i, p in enumerate(stream):
+        env.reward_weights_override = reward_schedule[int(week_idx[i])]
         rewards_s[i] = run_episode(env, static_agent, p, train=False).reward
         rewards_o[i] = run_episode(env, online_agent, p, train=True).reward
+    env.reward_weights_override = None  # restore default for any downstream user
     return DriftResult(rewards_static=rewards_s, rewards_online=rewards_o, week=week_idx)
 
 
@@ -170,7 +201,7 @@ def main() -> None:
     import csv
     import os
 
-    from ..agents.bandit import ContextualBandit
+    from ..agents.bandit import ContextualBandit, DiscountedContextualBandit
     from ..evaluation.plots import plot_drift
     from ..simulator.profiles import generate_profiles
 
@@ -186,6 +217,11 @@ def main() -> None:
                     help="also drift acc_req range from Uniform(0.60, 0.90) to Uniform(0.75, 0.95)")
     ap.add_argument("--drift-budget", action="store_true",
                     help="also drift monthly budget from log-U($1k, $30k) to log-U($500, $15k)")
+    ap.add_argument("--drift-reward", action="store_true",
+                    help="also drift reward weights from (0.5, 0.3, 0.2) to (0.3, 0.5, 0.2); "
+                         "simulates a mid-stream FinOps reprioritization (quality down, budget up)")
+    ap.add_argument("--agent", default="contextual", choices=("contextual", "discounted"),
+                    help="base bandit variant to pretrain and clone (vanilla LinUCB or D-LinUCB)")
     args = ap.parse_args()
 
     os.makedirs(args.out, exist_ok=True)
@@ -194,12 +230,17 @@ def main() -> None:
     all_results = []
     for seed in range(args.seeds):
         pretrain = generate_profiles(args.pretrain_n, seed=100 + seed)
+        if args.agent == "discounted":
+            factory = lambda s, a=args.alpha: DiscountedContextualBandit(seed=s, alpha=a)
+        else:
+            factory = lambda s, a=args.alpha: ContextualBandit(seed=s, alpha=a)
         res = run_drift_experiment(
-            agent_factory=lambda s, a=args.alpha: ContextualBandit(seed=s, alpha=a),
+            agent_factory=factory,
             pretrain_profiles=pretrain,
             weeks=args.weeks, per_week=args.per_week,
             pre_drift_weeks=args.pre_drift_weeks, seed=seed,
             drift_acc_req=args.drift_acc_req, drift_budget=args.drift_budget,
+            drift_reward=args.drift_reward,
         )
         all_results.append(res)
         for i in range(len(res.week)):
