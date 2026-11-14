@@ -16,7 +16,7 @@ import importlib
 from dataclasses import dataclass
 from typing import Callable
 
-from .bandit import ContextFreeBandit, ContextualBandit
+from .bandit import ContextFreeBandit, ContextualBandit, DiscountedContextualBandit
 from .heuristic import HeuristicAgent
 from .random_agent import RandomAgent
 
@@ -39,6 +39,7 @@ register("random", lambda s: RandomAgent(s))
 register("heuristic", lambda s: HeuristicAgent())
 register("bandit_context_free", lambda s: ContextFreeBandit(seed=s), train_epochs=20)
 register("bandit_contextual", lambda s: ContextualBandit(seed=s), train_epochs=20)
+register("bandit_discounted", lambda s: DiscountedContextualBandit(seed=s), train_epochs=20)
 
 
 def _try_register(name: str, module: str, cls: str, epochs: int) -> None:
