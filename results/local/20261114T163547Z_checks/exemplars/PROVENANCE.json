@@ -1,0 +1,410 @@
+{
+  "artifact_directory": "results/local/20261114T163547Z_checks/exemplars",
+  "artifact_group": "synthetic_profile_exemplars",
+  "artifact_hashes": {
+    "results/local/20261114T163547Z_checks/exemplars/PROFILE_EXEMPLARS.md": "3cb9addfa2b9fecae4a3a8cc175b2e78c4b3e30aa547037e0833213a5b2f1406",
+    "results/local/20261114T163547Z_checks/exemplars/profile_exemplars.csv": "ca72694f776d7651a2a2b5d5f82cf33cc01399041a8449268893daa9b7947b6d"
+  },
+  "calibration": {
+    "complete": false,
+    "holdout_cells": 0,
+    "outcome": "unverified",
+    "report": "results/local/20261114T163547Z_checks/calibration/report.md",
+    "summary_sha256": "e90103ba976509241d7c1515df3f8fe1973369a8250a1a93271040ece92ae57c"
+  },
+  "collected_at_utc": "2026-11-14T17:37:02.955698+00:00",
+  "collection_timing": "POST_RUN_RETROSPECTIVE",
+  "completion_evidence": "Artifact inspection only; no rerun. Interrupted ablation directories are excluded.",
+  "environment_observed_now": {
+    "installed_distributions": [
+      {
+        "name": "altair",
+        "version": "6.3.0"
+      },
+      {
+        "name": "anyio",
+        "version": "4.16.0"
+      },
+      {
+        "name": "attrs",
+        "version": "26.1.0"
+      },
+      {
+        "name": "certifi",
+        "version": "2026.10.23"
+      },
+      {
+        "name": "charset-normalizer",
+        "version": "3.5.2"
+      },
+      {
+        "name": "click",
+        "version": "8.5.1"
+      },
+      {
+        "name": "cloudpickle",
+        "version": "3.1.2"
+      },
+      {
+        "name": "contourpy",
+        "version": "1.4.0"
+      },
+      {
+        "name": "cuda-bindings",
+        "version": "13.5.0"
+      },
+      {
+        "name": "cuda-pathfinder",
+        "version": "1.8.6"
+      },
+      {
+        "name": "cuda-toolkit",
+        "version": "13.2.2"
+      },
+      {
+        "name": "cycler",
+        "version": "0.12.1"
+      },
+      {
+        "name": "Farama-Notifications",
+        "version": "0.0.6"
+      },
+      {
+        "name": "filelock",
+        "version": "4.2.10"
+      },
+      {
+        "name": "fonttools",
+        "version": "4.68.0"
+      },
+      {
+        "name": "fsspec",
+        "version": "2026.9.0"
+      },
+      {
+        "name": "gymnasium",
+        "version": "1.4.0"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0"
+      },
+      {
+        "name": "idna",
+        "version": "3.20"
+      },
+      {
+        "name": "iniconfig",
+        "version": "2.3.1"
+      },
+      {
+        "name": "itsdangerous",
+        "version": "2.2.0"
+      },
+      {
+        "name": "Jinja2",
+        "version": "3.1.6"
+      },
+      {
+        "name": "jsonschema",
+        "version": "4.26.0"
+      },
+      {
+        "name": "jsonschema-specifications",
+        "version": "2025.9.1"
+      },
+      {
+        "name": "kiwisolver",
+        "version": "1.5.1"
+      },
+      {
+        "name": "MarkupSafe",
+        "version": "3.0.4"
+      },
+      {
+        "name": "matplotlib",
+        "version": "3.11.2"
+      },
+      {
+        "name": "mpmath",
+        "version": "1.3.0"
+      },
+      {
+        "name": "narwhals",
+        "version": "2.28.0"
+      },
+      {
+        "name": "networkx",
+        "version": "3.7"
+      },
+      {
+        "name": "numpy",
+        "version": "2.5.4"
+      },
+      {
+        "name": "nvidia-cublas",
+        "version": "13.4.1.3"
+      },
+      {
+        "name": "nvidia-cuda-cccl",
+        "version": "13.3.5.0.6"
+      },
+      {
+        "name": "nvidia-cuda-cupti",
+        "version": "13.2.86"
+      },
+      {
+        "name": "nvidia-cuda-nvrtc",
+        "version": "13.2.86"
+      },
+      {
+        "name": "nvidia-cuda-runtime",
+        "version": "13.2.86"
+      },
+      {
+        "name": "nvidia-cudnn-cu13",
+        "version": "9.26.0.51"
+      },
+      {
+        "name": "nvidia-cufft",
+        "version": "12.2.0.57"
+      },
+      {
+        "name": "nvidia-cufile",
+        "version": "1.17.1.22"
+      },
+      {
+        "name": "nvidia-cusolver",
+        "version": "12.2.0.11"
+      },
+      {
+        "name": "nvidia-cusparse",
+        "version": "12.7.10.12"
+      },
+      {
+        "name": "nvidia-cusparselt-cu13",
+        "version": "0.8.1"
+      },
+      {
+        "name": "nvidia-nccl-cu13",
+        "version": "2.30.7"
+      },
+      {
+        "name": "nvidia-nvjitlink",
+        "version": "13.5.37"
+      },
+      {
+        "name": "nvidia-nvshmem-cu13",
+        "version": "3.7.2"
+      },
+      {
+        "name": "nvidia-nvtx",
+        "version": "13.2.86"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3"
+      },
+      {
+        "name": "pandas",
+        "version": "3.1.1"
+      },
+      {
+        "name": "pillow",
+        "version": "13.0.0"
+      },
+      {
+        "name": "pluggy",
+        "version": "1.7.0"
+      },
+      {
+        "name": "protobuf",
+        "version": "7.36.2"
+      },
+      {
+        "name": "pyarrow",
+        "version": "26.0.1"
+      },
+      {
+        "name": "pydeck",
+        "version": "0.9.3"
+      },
+      {
+        "name": "Pygments",
+        "version": "2.21.0"
+      },
+      {
+        "name": "pyparsing",
+        "version": "3.3.3"
+      },
+      {
+        "name": "pytest",
+        "version": "9.2.0"
+      },
+      {
+        "name": "python-dateutil",
+        "version": "4.0.0"
+      },
+      {
+        "name": "python-multipart",
+        "version": "0.0.33"
+      },
+      {
+        "name": "referencing",
+        "version": "0.37.0"
+      },
+      {
+        "name": "requests",
+        "version": "2.34.2"
+      },
+      {
+        "name": "rpds-py",
+        "version": "2026.9.1"
+      },
+      {
+        "name": "scipy",
+        "version": "1.18.1"
+      },
+      {
+        "name": "seaborn",
+        "version": "0.13.2"
+      },
+      {
+        "name": "setuptools",
+        "version": "84.2.1"
+      },
+      {
+        "name": "stable_baselines3",
+        "version": "2.9.2"
+      },
+      {
+        "name": "starlette",
+        "version": "1.10.0"
+      },
+      {
+        "name": "streamlit",
+        "version": "1.67.0"
+      },
+      {
+        "name": "sympy",
+        "version": "1.14.0"
+      },
+      {
+        "name": "torch",
+        "version": "2.15.0"
+      },
+      {
+        "name": "triton",
+        "version": "3.9.0"
+      },
+      {
+        "name": "typing_extensions",
+        "version": "4.16.0"
+      },
+      {
+        "name": "tzdata",
+        "version": "2026.6"
+      },
+      {
+        "name": "urllib3",
+        "version": "2.8.0"
+      },
+      {
+        "name": "uvicorn",
+        "version": "0.54.0"
+      },
+      {
+        "name": "watchdog",
+        "version": "7.1.0"
+      },
+      {
+        "name": "websockets",
+        "version": "17.4"
+      }
+    ],
+    "method": "importlib.metadata reading .venv/lib/python3.13/site-packages; no project interpreter or package imports executed",
+    "python_metadata": {
+      "implementation": "CPython",
+      "include-system-site-packages": "false",
+      "uv": "0.11.2",
+      "version_info": "3.13.12"
+    },
+    "python_metadata_source": ".venv/pyvenv.cfg",
+    "runtime_version_evidence": "Saved pytest.log reports Python 3.13.12 for the successful test session; experiment interpreter version was not captured at execution."
+  },
+  "interpretation": "Six synthetic exemplars from generate_profiles(1000, seed=1000); descriptive only. Seed overlaps reserved final-test profiles; do not use for policy or simulator tuning.",
+  "limitations": [
+    "Source hashes and installed dependency metadata were collected after execution, not before training.",
+    "Current source files and dependency versions are not proven identical to those used during execution.",
+    "No execution-time source snapshot or complete execution-time dependency inventory is available for these runs.",
+    "No workloads or dependency imports were rerun while collecting this provenance.",
+    "Verification tests establish internal consistency, not independent simulator calibration."
+  ],
+  "result_label": "PROVISIONAL_UNCALIBRATED",
+  "run_configurations": {},
+  "schema_version": 1,
+  "source_observed_now": {
+    "canonical_manifest_encoding": "UTF-8 JSON with sort_keys=True and separators=(comma,colon)",
+    "canonical_manifest_sha256": "ab0f732e5ea9bdea60ea5c630641d4002536937cc7a237ce9776cb126c3b9106",
+    "files": {
+      ".gitignore": "0f0e0533ac92356cf70afd083f3ed81939bb0ed57605a4e362f67b9b586f0d86",
+      "README.md": "99cc8a76628ff2ad56d2b3590abc8e8510ac3999339f94e5815dc8fc11b402e5",
+      "data/benchmarks/calibration_references.csv": "475fc04d9f85c2cb9d1988f2406847907791686944b87f565c0d1edd757df17e",
+      "data/benchmarks/sources.md": "2e325cdf099b471f6f970b17710659beb20d4ed0882e11caed6aa68ffa8f7fc4",
+      "docs/EVALUATION.md": "110574ae6bc4cadb4db693956a8dc1d183831e39b0f00ef699696ca1f0f76376",
+      "infrarl/__init__.py": "ffae9a09eb937740cccd190d16f1cc451aba343021f7a24a14dfa6593bb318a9",
+      "infrarl/agents/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "infrarl/agents/bandit.py": "c89b8f173192ea83b6c440f0951788bffa96da5f989ed1e04aa3e6f362634674",
+      "infrarl/agents/base.py": "50307ab627cc79635eae38a0e0140803d2888e0f51e1bcc8d49288709d0e1f39",
+      "infrarl/agents/dqn_agent.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "infrarl/agents/heuristic.py": "e1305fae18fdbf77cd65379fc0b6e3fcecfa9562cfafbdb7aee7a613366c9635",
+      "infrarl/agents/ppo_agent.py": "bec3ed85d93419c20e6831ffc2c17973cb34e81e751d107ef9153b3f050bdf76",
+      "infrarl/agents/q_learning.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "infrarl/agents/random_agent.py": "275f4ff6144062787fdcb76cea1b3a9604991d5dff87e564c7f13acd99b87682",
+      "infrarl/agents/registry.py": "7a860963208a92482caf4708e0626d41598cd689a697cc09d93f389363bd5e48",
+      "infrarl/app.py": "94194655708bd89880ce01cfcd28b21c1cf738f8b2c4967a34415f5e8bf2cc60",
+      "infrarl/evaluation/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "infrarl/evaluation/ablations.py": "279caadad3980b799c4f55a286523263640f04c107d6d72af76300df0e2c8f85",
+      "infrarl/evaluation/experiments.py": "08b622960e40be798442f6d59312ee8efb9df5dac2a8d6a22318c7f849131396",
+      "infrarl/evaluation/plots.py": "c6aa9b2c4c9bd4effd43ef405144cbeceaf05ecd2e5c23afe26918a38d12821b",
+      "infrarl/evaluation/run_experiment.py": "90f9198996a5e81b10effebb42259c00b0ceb8d3d74f9b6e2279f99bc3388b5f",
+      "infrarl/evaluation/stats.py": "ec725345e10f9ed29585c42ce83035a3e5f44cd6cb6e623d04bc0b8203f35933",
+      "infrarl/evaluation/verify.py": "c852fc031567b86e53abb4a699485421a85394350696a0698722e7119e4d4809",
+      "infrarl/online/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "infrarl/online/contextual_bandit.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "infrarl/simulator/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "infrarl/simulator/calibration.py": "b12471dd5ba8e0dada40354d270e0e3f6ecd27dd0234cb532c0da1445242ccfd",
+      "infrarl/simulator/environment.py": "646a22d37ab19bf7ad421787fe63ab82d0c31ad21493822bcb0648cac4cd3abb",
+      "infrarl/simulator/estimator.py": "d9b46d48d87388100f3d03d968c2bdd830b39c188e6a0e617c05b7cbbd787931",
+      "infrarl/simulator/hardware.py": "bd035ace8359cfff4bb205facaadf982b0d148442c2e723539f9563fb90561fd",
+      "infrarl/simulator/models.py": "65bccc7c40e34ad3c67195f332401526a6541a5cb1faa3f97550212e7e861cd8",
+      "infrarl/simulator/profiles.py": "f05ceec63e4321295e794745026e992d5fd2f1ebe9e6fcb07558f1a4c97860aa",
+      "requirements.txt": "37cd2482a118cbb071a82df558a3825a1d675c8708a88582518101bbcd3b7778",
+      "scripts/generate_profile_exemplars.py": "62198e2a5050a85f6896e5bab7bbaa7c9f0f27970af8cc7183d08e0b9d5079e0",
+      "scripts/run_calibration.py": "a30662639cf357d65b8ddfc8046e60cccef59cc1985b4bd0d18e6241e0fef46a",
+      "scripts/zaratan/README.md": "28701e7a4f1b4f5dbbfd84aea63089d88bc1149c6a5cb3fe7158a520a6040dba",
+      "scripts/zaratan/checkout.sh": "3ae405e4c88ef3412027619c9d1223d8957169406dede7f85cac42ba5826e35f",
+      "scripts/zaratan/checks_config.json": "c012db9029ef159b0404910e532aadb56bc4e9357a9045fd5176eaeacfa8c4b7",
+      "scripts/zaratan/prepare_run.py": "35038acf71887fefaa78f289b9555f5875b40f21c16ccafa2df02ce763a4d2e0",
+      "scripts/zaratan/run_experiment.sbatch": "6e750831eaab2e6b05cc658ac230380b1506e6d593fca501decc72365b502219",
+      "scripts/zaratan/setup.sh": "864c8dd96427c394105405abc6d5110151c55ae1580df35eaf919a6a38a02a32",
+      "scripts/zaratan/sync.sh": "9350f0a6601fa3e133c5fb027873b9109d5f0fbfc2b67e049f568f3a6feeb95d",
+      "scripts/zaratan/sync_safe.sh": "8787920e5dda6e9af241b1e29291f2020e413db69d2ae2ab6fb6cf4e4061452c",
+      "scripts/zaratan/transfer_files.txt": "0df13689e12043281b4a6763754b369d5f332b2e35544721a0df8c7f7e804869",
+      "scripts/zaratan/workflow.py": "ce37029a00150af4f914b9790813909451cde4566a5c173409abd1e2b2f8344b",
+      "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/test_agents.py": "bd82b93f82f3f42d659b8bbfd31e352061e4f583469aa2e3820aa299e3348e26",
+      "tests/test_calibration.py": "b582838809d029c041652e9303055b8bde5636158dff55675c52c0b164421c26",
+      "tests/test_env.py": "64781c451494e8dbadfd66a1446a8064ad3f5b3ba7b0b053b7862456d2617b72",
+      "tests/test_evaluation.py": "43b90febb5f4f0c6ab96831774ed588fdc08ee249389597e34fbb38e3fbed42d",
+      "tests/test_simulator.py": "15e9002bf7f7a2c035c1ffcf695410fa013d0a93353e064028b5161db6a54e76",
+      "tests/test_verification.py": "398045dccda7eacf5dd19613775905cf58d4daa26c48d579d1546ed9ce2b089b",
+      "tests/test_zaratan_workflow.py": "0887458683f818f7b2b6af7c2605753613c1554a72f116157806db2ff1b1dad1"
+    },
+    "git_branch": "annu-experiments-local",
+    "git_commit": "d77ed5ea2951960a3ee4ad374c4c2012c80a9923",
+    "git_status_porcelain": "D temp.txt",
+    "hash_algorithm": "SHA256",
+    "scope": "Current tracked and nonignored untracked project implementation, tests, shared execution documentation and dependency definitions; excludes private notes, results, environment and hpc."
+  }
+}

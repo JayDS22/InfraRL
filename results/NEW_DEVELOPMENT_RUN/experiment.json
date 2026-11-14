@@ -1,0 +1,43 @@
+{
+  "agents": "random,heuristic,bandit_context_free,bandit_contextual,ppo",
+  "n_train": 1000,
+  "n_test": 1000,
+  "n_validation": 1000,
+  "evaluation_split": "validation",
+  "seeds": 3,
+  "epochs": null,
+  "ablate": "",
+  "out": "results/NEW_DEVELOPMENT_RUN",
+  "train_profile_seeds": [
+    2000,
+    2001,
+    2002
+  ],
+  "validation_seed": 3000,
+  "test_seed": 1000,
+  "curve_split": "validation",
+  "budgets": {
+    "random": {
+      "epochs": 0,
+      "profiles_per_epoch": 1000
+    },
+    "heuristic": {
+      "epochs": 0,
+      "profiles_per_epoch": 1000
+    },
+    "bandit_context_free": {
+      "epochs": 20,
+      "profiles_per_epoch": 1000
+    },
+    "bandit_contextual": {
+      "epochs": 20,
+      "profiles_per_epoch": 1000
+    },
+    "ppo": {
+      "epochs": 30,
+      "profiles_per_epoch": 1000
+    }
+  },
+  "ablation_interpretation": "restricted-action-space; matched profile exposures and epochs; transition counts may differ",
+  "no_precision_tuning": "FP16 preference with INT8/INT4 fallback for memory fit"
+}

@@ -1,0 +1,26 @@
+{
+  "agents": "ppo",
+  "n_train": 250,
+  "n_test": 1000,
+  "n_validation": 1000,
+  "evaluation_split": "validation",
+  "seeds": 2,
+  "epochs": 5,
+  "ablate": "ppo",
+  "out": "/home/anupama/src/InfraRL/results/local/review_407xb1LL/ppo_ablations_small_20261114T165426Z",
+  "train_profile_seeds": [
+    2000,
+    2001
+  ],
+  "validation_seed": 3000,
+  "test_seed": 1000,
+  "curve_split": "validation",
+  "budgets": {
+    "ppo": {
+      "epochs": 5,
+      "profiles_per_epoch": 250
+    }
+  },
+  "ablation_interpretation": "restricted-action-space; matched profile exposures and epochs; transition counts may differ",
+  "no_precision_tuning": "FP16 preference with INT8/INT4 fallback for memory fit"
+}

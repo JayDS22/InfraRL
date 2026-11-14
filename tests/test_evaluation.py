@@ -80,3 +80,34 @@ def test_train_returns_curve_and_registry_plugin():
         assert 0 <= s["budget_compliance"] <= 1 and s["meets_all"] <= s["budget_compliance"]
     finally:
         REGISTRY.pop("tmp_bandit")
+
+
+def test_run_one_curves_use_only_validation(monkeypatch):
+    from infrarl.evaluation import run_experiment as driver
+    seen = []
+    train_profiles = generate_profiles(2, 2000)
+    validation = generate_profiles(2, 3000)
+    test = generate_profiles(2, 1000)
+    def recording_train(env, agent, profiles, epochs, seed, eval_profiles):
+        seen.append(eval_profiles)
+        return []
+    monkeypatch.setattr(driver, 'train', recording_train)
+    driver.run_one(REGISTRY['bandit_context_free'], 0, train_profiles, test,
+                   lambda p, s: InfraEnv(p, seed=s), validation_profiles=validation)
+    assert seen == [validation]
+    assert seen[0] is not test
+
+
+def test_ppo_optimizer_smoke_updates(tmp_path):
+    pytest = __import__('pytest')
+    pytest.importorskip('torch')
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / 'scripts/zaratan/workflow.py'
+    spec = importlib.util.spec_from_file_location('workflow_optimizer_test', path)
+    workflow = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(workflow)
+    workflow.ppo_smoke(tmp_path)
+    result = workflow.load(tmp_path / 'ppo-update.json')
+    assert result['optimizer_steps'] > 0
+    assert result['parameters_changed'] and result['finite']
