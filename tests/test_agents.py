@@ -15,7 +15,10 @@ try:
 except ImportError:
     _HAS_TORCH = False
 
-ALL = [lambda: RandomAgent(0), HeuristicAgent, lambda: ContextFreeBandit(seed=0), lambda: ContextualBandit(seed=0)]
+from infrarl.agents.q_learning import QLearningAgent
+
+ALL = [lambda: RandomAgent(0), HeuristicAgent, lambda: ContextFreeBandit(seed=0), lambda: ContextualBandit(seed=0),
+       lambda: QLearningAgent(seed=0)]
 if _HAS_TORCH:
     # rollout_size large enough that the 60-profile protocol test never triggers _learn
     ALL.append(lambda: PPOAgent(seed=0, rollout_size=10_000))
@@ -62,4 +65,20 @@ def test_ppo_auto_registered():
     from infrarl.agents.registry import REGISTRY
     assert "ppo" in REGISTRY
     spec = REGISTRY["ppo"]
+    assert spec.train_epochs > 0 and callable(spec.factory)
+
+
+def test_q_learning_learns():
+    profiles = generate_profiles(250, 13)
+    env = InfraEnv(profiles)
+    r = summarize(evaluate(env, RandomAgent(0), profiles))
+    q = summarize(evaluate(env, QLearningAgent(seed=0, epsilon_decay_episodes=1500),
+                           profiles, train_epochs=20))
+    assert q["mean_reward"] > r["mean_reward"]
+
+
+def test_q_learning_auto_registered():
+    from infrarl.agents.registry import REGISTRY
+    assert "q_learning" in REGISTRY
+    spec = REGISTRY["q_learning"]
     assert spec.train_epochs > 0 and callable(spec.factory)
