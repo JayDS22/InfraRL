@@ -1,0 +1,76 @@
+{
+  "masks": {
+    "feasible_tiers": 51,
+    "feasible_tiers_independent": 51,
+    "nodes": 3713,
+    "dead_ends": 0,
+    "masked_actions_accepted": 0,
+    "nonzero_nonterminal_reward": 0,
+    "infeasible_terminal_stacks": 0,
+    "terminal_errors": 0,
+    "bad_episode_length": 0,
+    "paths_1_tier": 153,
+    "paths_2_tier": 7803,
+    "expected_paths_1_tier": 153,
+    "expected_paths_2_tier": 7803,
+    "path_counts_match_closed_form": true,
+    "three_tier_sampled": 20000,
+    "n_failed": 0
+  },
+  "simulator": {
+    "checked": {
+      "quality_vs_model_size": 4800,
+      "latency_vs_hardware": 4800,
+      "latency_vs_precision": 4800,
+      "quantisation_never_raises_quality": 4800,
+      "cost_scaling_order": 300,
+      "cost_vs_traffic": 300,
+      "quality_independent_of_hardware": 300
+    },
+    "failed": {
+      "quality_vs_model_size": 0,
+      "latency_vs_hardware": 0,
+      "latency_vs_precision": 0,
+      "quantisation_never_raises_quality": 0,
+      "cost_scaling_order": 0,
+      "cost_vs_traffic": 0,
+      "quality_independent_of_hardware": 0
+    },
+    "n_failed": 0
+  },
+  "reward": {
+    "checked": 6,
+    "n_failed": 0,
+    "max_reward": 1.18
+  },
+  "determinism": {
+    "checked": 3,
+    "n_failed": 0
+  },
+  "oracle": {
+    "profile_seed": 3000,
+    "n_profiles": 1000,
+    "n_single_tier_stacks": 153,
+    "oracle_mean_reward": 1.141228269874476,
+    "fully_satisfiable_fraction": 0.858,
+    "heuristic": {
+      "mean_reward": 1.0312518592905813,
+      "mean_gap": 0.10997641058389458,
+      "within_0.01_of_oracle": 0.491,
+      "above_oracle": 0.0
+    },
+    "bandit_contextual": {
+      "mean_reward": 1.0434871371061398,
+      "mean_gap": 0.09774113276833606,
+      "within_0.01_of_oracle": 0.463,
+      "above_oracle": 0.0
+    }
+  },
+  "price_anchor": {
+    "h100": {
+      "published": 4.5,
+      "simulator": 4.5,
+      "residual_pct": 0.0
+    }
+  }
+}

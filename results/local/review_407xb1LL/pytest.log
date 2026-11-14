@@ -1,0 +1,15 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.12, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/anupama/src/InfraRL
+plugins: anyio-4.16.0
+collected 59 items
+
+tests/test_agents.py .....                                               [  8%]
+tests/test_calibration.py .........                                      [ 23%]
+tests/test_env.py ......                                                 [ 33%]
+tests/test_evaluation.py ........                                        [ 47%]
+tests/test_simulator.py ....                                             [ 54%]
+tests/test_verification.py ....                                          [ 61%]
+tests/test_zaratan_workflow.py .......................                   [100%]
+
+======================== 59 passed in 181.58s (0:03:01) ========================

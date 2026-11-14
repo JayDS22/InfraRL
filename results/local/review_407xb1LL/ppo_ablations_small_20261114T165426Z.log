@@ -1,0 +1,39 @@
+[ppo seed 0] reward=1.036 budget=0.907 sla=0.822
+[ppo seed 1] reward=1.038 budget=0.928 sla=0.922
+
+Ablations (mean over seeds):
+                       mean_cost_usd  avg_quality  quality_compliance  sla_compliance  budget_compliance  mean_reward
+variant                                                                                                              
+full                         1379.88        0.767               0.570           0.872              0.918        1.037
+no_hardware_awareness        2674.08        0.788               0.634           0.937              0.766        1.012
+no_multitier                  915.12        0.767               0.570           0.756              0.971        1.031
+no_precision_tuning          1200.24        0.782               0.625           0.748              0.939        1.031
+no_scaling_policy            1379.88        0.767               0.570           0.872              0.918        1.037
+
+Summary (mean over seeds):
+       avg_quality  quality_attainment  quality_compliance  budget_compliance  sla_compliance  meets_all  mean_reward  mean_cost_usd
+agent                                                                                                                               
+ppo          0.767               0.962                0.57              0.918           0.872      0.475        1.037        1379.88
+	Command being timed: "python -u -m infrarl.evaluation.run_experiment --agents ppo --ablate ppo --n-train 250 --n-validation 1000 --evaluation-split validation --seeds 2 --epochs 5 --out /home/anupama/src/InfraRL/results/local/review_407xb1LL/ppo_ablations_small_20261114T165426Z"
+	User time (seconds): 785.51
+	System time (seconds): 3.66
+	Percent of CPU this job got: 102%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 12:46.68
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1014104
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 4
+	Minor (reclaiming a frame) page faults: 140301
+	Voluntary context switches: 89
+	Involuntary context switches: 2479
+	Swaps: 0
+	File system inputs: 16808
+	File system outputs: 928
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
