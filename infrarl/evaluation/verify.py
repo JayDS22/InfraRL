@@ -212,8 +212,8 @@ def check_determinism(seed: int = 0) -> dict:
     return {"checked": 3, "n_failed": int(not ok)}
 
 
-def oracle_gap(n: int = 1000, seed: int = 1000) -> dict:
-    """Brute-force best single-tier stack per profile vs the heuristic and the context-aware bandit."""
+def oracle_gap(n: int = 1000, seed: int = 3000) -> dict:
+    """Single-tier oracle comparison on validation profiles by default; reserve test seed 1000."""
     profiles = generate_profiles(n, seed)
     stacks = [Stack((Tier(h, m, pr),), s)
               for h, m, pr, s in itertools.product(HARDWARE_NAMES, MODEL_NAMES, PRECISION_NAMES, SCALING_POLICIES)
@@ -232,7 +232,7 @@ def oracle_gap(n: int = 1000, seed: int = 1000) -> dict:
     env = InfraEnv(profiles)
     agents = {"heuristic": HeuristicAgent(), "bandit_contextual": ContextualBandit(seed=0)}
     train_profiles = generate_profiles(1000, 2000)
-    out = {"n_profiles": n, "n_single_tier_stacks": len(stacks), "oracle_mean_reward": float(np.mean(oracle)),
+    out = {"profile_seed": seed, "n_profiles": n, "n_single_tier_stacks": len(stacks), "oracle_mean_reward": float(np.mean(oracle)),
            "fully_satisfiable_fraction": satisfiable / n}
     for name, agent in agents.items():
         res = evaluate(InfraEnv(train_profiles), agent, profiles, train_epochs=20 if name != "heuristic" else 0, seed=0)
@@ -251,15 +251,18 @@ def check_price_anchor() -> dict:
 
 
 def main() -> None:
+    from infrarl import require_compute_allocation
+    require_compute_allocation()
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="results/verification.json")
+    ap.add_argument("--profile-seed", type=int, default=3000, help="oracle validation profiles; final test seed is reserved")
     args = ap.parse_args()
     out = {
         "masks": check_masks(),
         "simulator": check_simulator(),
         "reward": check_reward(),
         "determinism": check_determinism(),
-        "oracle": oracle_gap(),
+        "oracle": oracle_gap(seed=args.profile_seed),
         "price_anchor": check_price_anchor(),
     }
     import os

@@ -1,0 +1,16 @@
+id,config_id,hardware,model,precision,axis,reference,units,source_url,role,required,model_id,hardware_id,runtime,workload,retrieved_utc,independent_reference,reference_status,prediction,residual_pct,status,outcome,reason
+cpu_3b_int8_quality,cpu_3b_int8,cpu,3b,int8,quality,,fraction,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+cpu_3b_int8_latency,cpu_3b_int8,cpu,3b,int8,latency,,ms,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+cpu_3b_int8_cost,cpu_3b_int8,cpu,3b,int8,cost,,USD/month,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+a10_13b_int8_quality,a10_13b_int8,a10,13b,int8,quality,,fraction,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+a10_13b_int8_latency,a10_13b_int8,a10,13b,int8,latency,,ms,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+a10_13b_int8_cost,a10_13b_int8,a10,13b,int8,cost,,USD/month,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+a100_70b_int8_quality,a100_70b_int8,a100,70b,int8,quality,,fraction,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+a100_70b_int8_latency,a100_70b_int8,a100,70b,int8,latency,,ms,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+a100_70b_int8_cost,a100_70b_int8,a100,70b,int8,cost,,USD/month,,calibration,true,,,,,,false,PENDING_SOURCE,,,MISSING_REFERENCE,unverified,No independently verified reference
+a10_13b_fp16_quality,a10_13b_fp16,a10,13b,fp16,quality,,fraction,,original_infeasible_test,false,,,,,,false,ORIGINAL_INFEASIBLE,,,INFEASIBLE,infeasible,Weights-only memory exceeds one device; never estimated or fitted
+a10_13b_fp16_latency,a10_13b_fp16,a10,13b,fp16,latency,,ms,,original_infeasible_test,false,,,,,,false,ORIGINAL_INFEASIBLE,,,INFEASIBLE,infeasible,Weights-only memory exceeds one device; never estimated or fitted
+a10_13b_fp16_cost,a10_13b_fp16,a10,13b,fp16,cost,,USD/month,,original_infeasible_test,false,,,,,,false,ORIGINAL_INFEASIBLE,,,INFEASIBLE,infeasible,Weights-only memory exceeds one device; never estimated or fitted
+a100_70b_fp16_quality,a100_70b_fp16,a100,70b,fp16,quality,,fraction,,original_infeasible_test,false,,,,,,false,ORIGINAL_INFEASIBLE,,,INFEASIBLE,infeasible,Weights-only memory exceeds one device; never estimated or fitted
+a100_70b_fp16_latency,a100_70b_fp16,a100,70b,fp16,latency,,ms,,original_infeasible_test,false,,,,,,false,ORIGINAL_INFEASIBLE,,,INFEASIBLE,infeasible,Weights-only memory exceeds one device; never estimated or fitted
+a100_70b_fp16_cost,a100_70b_fp16,a100,70b,fp16,cost,,USD/month,,original_infeasible_test,false,,,,,,false,ORIGINAL_INFEASIBLE,,,INFEASIBLE,infeasible,Weights-only memory exceeds one device; never estimated or fitted

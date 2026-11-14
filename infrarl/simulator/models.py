@@ -1,9 +1,8 @@
 """Model / precision lookup tables.
 
-Quality is per use case, calibrated against public benchmarks (LMSYS Arena ELO
-normalised to [0, 1] for chatbot, HumanEval pass@1 for code generation, MMLU
-for structured extraction / RAG / batch). Values below are placeholders until
-the calibration pass is done.
+Quality is a per-use-case placeholder, not independently calibrated benchmark
+accuracy. Named checkpoints, tasks and compatible metric definitions must be
+matched before comparing values with public benchmark references.
 """
 from __future__ import annotations
 
