@@ -22,8 +22,10 @@ from .stats import compare_agents
 
 TEST_SEED = 1000
 VALIDATION_SEED = 3000
-METRICS = ["avg_quality", "quality_attainment", "quality_compliance", "budget_compliance",
-           "sla_compliance", "meets_all", "mean_reward", "mean_cost_usd"]
+# Headline operational metrics lead the summary.csv column order so the
+# per-report table is readable left-to-right without reshuffling in post.
+METRICS = ["quality_compliance", "budget_compliance", "sla_compliance", "meets_all",
+           "mean_reward", "mean_cost_usd", "avg_quality", "quality_attainment"]
 
 
 def run_one(spec, seed, train_profiles, test_profiles, env_factory, epochs=None, arm_filter=None, validation_profiles=None):
