@@ -5,8 +5,10 @@ fraction of traffic. Quality and latency are traffic-weighted averages; cost is
 the sum over tiers of replicas * hourly price.
 
 NOTE: constants here are uncalibrated placeholders. The 3-config residual check
-(Small CPU+3B+int8, Mid A10+13B+fp16, Large A100+70B+fp16; <=15% per axis) must
-pass before reported numbers are trusted.
+(CPU+3B+int8, A10+13B+int8, A100+70B+int8; <=15% per matched axis)
+requires independent matched references before reported numbers are trusted.
+Original A10+13B+fp16 and A100+70B+fp16 anchors are weights-infeasible;
+retain them as rejection tests, never as fitted calibration points.
 """
 from __future__ import annotations
 
