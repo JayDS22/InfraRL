@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from infrarl.agents.base import Agent
-from infrarl.agents.bandit import ContextFreeBandit, ContextualBandit
+from infrarl.agents.bandit import ContextFreeBandit, ContextualBandit, DiscountedContextualBandit
 from infrarl.agents.heuristic import HeuristicAgent
 from infrarl.agents.random_agent import RandomAgent
 from infrarl.evaluation.experiments import evaluate, run_episode, summarize
@@ -18,7 +18,7 @@ except ImportError:
 from infrarl.agents.q_learning import QLearningAgent
 
 ALL = [lambda: RandomAgent(0), HeuristicAgent, lambda: ContextFreeBandit(seed=0), lambda: ContextualBandit(seed=0),
-       lambda: QLearningAgent(seed=0)]
+       lambda: DiscountedContextualBandit(seed=0), lambda: QLearningAgent(seed=0)]
 if _HAS_TORCH:
     # rollout_size large enough that the 60-profile protocol test never triggers _learn
     ALL.append(lambda: PPOAgent(seed=0, rollout_size=10_000))
@@ -82,3 +82,16 @@ def test_q_learning_auto_registered():
     assert "q_learning" in REGISTRY
     spec = REGISTRY["q_learning"]
     assert spec.train_epochs > 0 and callable(spec.factory)
+
+
+def test_discounted_bandit_learns_and_matches_vanilla_on_stationary():
+    profiles = generate_profiles(300, 17)
+    env = InfraEnv(profiles)
+    r = summarize(evaluate(env, RandomAgent(0), profiles))
+    d = summarize(evaluate(env, DiscountedContextualBandit(seed=0, gamma=0.995), profiles, train_epochs=8))
+    assert d["mean_reward"] > r["mean_reward"]
+
+
+def test_discounted_bandit_registered():
+    from infrarl.agents.registry import REGISTRY
+    assert "bandit_discounted" in REGISTRY

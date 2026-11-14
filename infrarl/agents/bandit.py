@@ -105,3 +105,36 @@ class ContextualBandit(_ArmBandit):
         Ax = Ai @ ctx
         self.A_inv[arm] = Ai - np.outer(Ax, Ax) / (1.0 + ctx @ Ax)  # Sherman-Morrison
         self.b[arm] += reward * ctx
+
+
+class DiscountedContextualBandit(_ArmBandit):
+    """D-LinUCB (Russac, Vernade, Cappe, NeurIPS 2019): non-stationary LinUCB with
+    exponential forgetting on the design matrix. Replaces the equal-weight
+    Sherman-Morrison update with A_t = gamma * A_{t-1} + x x^T + (1-gamma) * reg * I,
+    b_t = gamma * b_{t-1} + r * x. Effective sample window is ~1/(1-gamma) steps.
+    With d=17 features and 153 arms, direct inversion per selection is O(153 * d^3)
+    ~ 0.7ms per step and avoids the gamma-aware Sherman-Morrison bookkeeping.
+    """
+    name = "bandit_discounted"
+
+    def __init__(self, alpha: float = 0.3, gamma: float = 0.995, reg: float = 1.0, seed: int = 0):
+        super().__init__(seed)
+        d = N_PROFILE_FEATURES + 1
+        self.alpha = alpha
+        self.gamma = gamma
+        self.reg = reg
+        self._d = d
+        self.A = np.stack([reg * np.eye(d) for _ in self.arms])
+        self.b = np.zeros((len(self.arms), d))
+
+    def _choose(self, ctx, explore):
+        A_inv = np.linalg.inv(self.A)  # (n_arms, d, d); d=17 so this is cheap
+        theta = np.einsum("aij,aj->ai", A_inv, self.b)
+        mean = theta @ ctx
+        if explore:
+            mean = mean + self.alpha * np.sqrt(np.einsum("i,aij,j->a", ctx, A_inv, ctx))
+        return int(np.argmax(np.where(self.arm_allowed, mean, -np.inf)))
+
+    def _learn(self, arm, ctx, reward):
+        self.A[arm] = self.gamma * self.A[arm] + np.outer(ctx, ctx) + (1.0 - self.gamma) * self.reg * np.eye(self._d)
+        self.b[arm] = self.gamma * self.b[arm] + reward * ctx
