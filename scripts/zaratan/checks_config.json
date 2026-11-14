@@ -1,0 +1,32 @@
+{
+  "run_id": "checks_template",
+  "phase": "checks",
+  "agents": [
+    "random",
+    "heuristic",
+    "bandit_context_free",
+    "bandit_contextual",
+    "ppo"
+  ],
+  "account": "",
+  "remote_source": "",
+  "remote_results": "",
+  "python": "",
+  "resources": {
+    "partition": "standard",
+    "cpus": 4,
+    "memory": "8G",
+    "time": "02:00:00",
+    "gpus": 0
+  },
+  "n_train": 1000,
+  "n_validation": 1000,
+  "n_test": 1000,
+  "seeds": 3,
+  "epochs": null,
+  "hyperparameters_frozen": false,
+  "calibration": {
+    "outcome": "unverified"
+  },
+  "python_version": "3.13"
+}

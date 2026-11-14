@@ -30,13 +30,18 @@ See `proposal.pdf` and `ROADMAP.md` for details. Dataflow and RL loop diagrams i
 ```bash
 pytest -q tests
 python demo.py                                              # original smoke test
-python -m infrarl.evaluation.run_experiment --seeds 3 --out results
+python -m infrarl.evaluation.run_experiment --agents random,heuristic,bandit_context_free,bandit_contextual,ppo --seeds 3 --out results/NEW_DEVELOPMENT_RUN
 streamlit run infrarl/app.py
 ```
 
+These compute commands are for local WSL; on Zaratan use the CPU Slurm workflow in
+[scripts/zaratan/README.md](scripts/zaratan/README.md). Reuse the existing `.venv`;
+login-node scripts do not install packages or execute these workloads.
 See `docs/EVALUATION.md` for the protocol, metrics and how to plug in agents.
 
 Status: simulator tables are uncalibrated placeholders (3-config residual check pending).
 Random, heuristic, context-free and contextual (LinUCB) bandit baselines, the evaluation harness,
-ablations and the Streamlit demo run end to end. Q-learning, DQN, PPO and the online-adaptation
-loop are not implemented yet; see `docs/EVALUATION.md` for how to plug them in.
+ablations and the Streamlit demo run end to end. PPO is implemented and requires PyTorch. Q-learning and DQN remain empty placeholders;
+Online adaptation is outside this experiment update. See `docs/EVALUATION.md`
+for how to plug in agents. Calibration reporting exists but matched reference
+coverage remains incomplete; internal verification does not establish external calibration.

@@ -5,5 +5,30 @@ venv/
 .DS_Store
 *.log
 results/
-__pycache__/
 .pytest_cache/
+.agents/
+.aws/
+.codex/
+
+# Local tooling caches and workflow artifacts.
+.uv-data/
+.workflow-validation/
+
+InfraRL_Anupama_Codex_Guide_with_Zaratan.md
+
+# Personal guides, handoff notes, drafts and machine-specific helpers.
+/InfraRL_Anupama_Codex_Guide*.md
+/infrarl_anupam*_codex*
+/docs/ZARATAN_HANDOFF.md
+/docs/FREEZE_READINESS.md
+/docs/RESEARCH_DECISIONS.md
+/docs/SIMULATOR_CALIBRATION_APPENDIX.md
+/hpc/
+/zaratan_handoff/
+/.python-version
+.claude/
+
+# Local environment files; retain shareable example templates.
+.env
+.env.*
+!.env.example
