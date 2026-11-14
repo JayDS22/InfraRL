@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from infrarl.agents.bandit import ContextualBandit
 from infrarl.online.drift import drift_mix, generate_drift_stream, run_drift_experiment
@@ -44,6 +45,32 @@ def test_budget_drift_shifts_distribution():
     last_a = np.array([p.monthly_budget_usd for p, w in zip(profiles_a, week_a) if w == 3])
     last_b = np.array([p.monthly_budget_usd for p, w in zip(profiles_b, week_b) if w == 3])
     assert last_b.mean() < last_a.mean() * 0.7
+
+
+def test_reward_weight_schedule_shifts_mid_stream():
+    from infrarl.online.drift import _reward_weights_per_week, _BASE_REWARD_WEIGHTS, _SHIFTED_REWARD_WEIGHTS
+    schedule = _reward_weights_per_week(weeks=4, pre_drift_weeks=1, drift_reward=True)
+    assert schedule[0] == _BASE_REWARD_WEIGHTS
+    assert all(abs(a - b) < 1e-9 for a, b in zip(schedule[-1], _SHIFTED_REWARD_WEIGHTS))
+    off = _reward_weights_per_week(weeks=4, pre_drift_weeks=1, drift_reward=False)
+    assert all(w == _BASE_REWARD_WEIGHTS for w in off)
+
+
+def test_env_reward_weights_override_round_trips_through_terminal_reward():
+    from infrarl.simulator.environment import InfraEnv, terminal_reward
+    profiles = generate_profiles(5, 0)
+    env = InfraEnv(profiles)
+    env.reward_weights_override = (0.3, 0.5, 0.2)
+    rng = np.random.default_rng(0)
+    env.reset()
+    while True:
+        mask = env.action_masks()
+        _, r, term, _, info = env.step(int(rng.choice(np.flatnonzero(mask))))
+        if term:
+            expected, _ = terminal_reward(info["quality"], info["latency_ms"], info["cost_usd"],
+                                          env.profile, (0.3, 0.5, 0.2))
+            assert abs(r - expected) < 1e-9
+            break
 
 
 def test_drift_experiment_online_matches_or_beats_static_on_drift():
