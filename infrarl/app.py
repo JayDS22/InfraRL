@@ -56,21 +56,30 @@ rows = []
 for name in agents:
     env = InfraEnv([profile])
     r = run_episode(env, trained_agent(name), profile, train=False)
+    meets_all = r.meets_quality and r.within_budget and r.meets_sla
     rows.append({
         "method": name, "stack": r.stack.replace("|", " | "), "quality": round(r.quality, 3),
         "latency_ms": round(r.latency_ms), "cost_usd/mo": round(r.cost_usd),
         "quality ok": r.meets_quality, "budget ok": r.within_budget, "SLA ok": r.meets_sla,
-        "reward": round(r.reward, 3),
+        "meets all": meets_all, "reward": round(r.reward, 3),
     })
 
 if rows:
     df = pd.DataFrame(rows)
-    best = df.sort_values("reward", ascending=False).iloc[0]
+    # prefer methods that meet all three constraints; fall back to raw reward
+    df_sorted = df.sort_values(["meets all", "reward"], ascending=[False, False])
+    best = df_sorted.iloc[0]
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Best method (by reward)", best["method"])
-    c2.metric("Quality", best["quality"], delta=f"req {acc:.2f}")
-    c3.metric("Latency (ms)", best["latency_ms"], delta=f"SLA {sla}", delta_color="off")
-    c4.metric("Cost / month", f"${best['cost_usd/mo']:,}", delta=f"budget ${budget:,}", delta_color="off")
-    st.dataframe(df, width="stretch", hide_index=True)
+    c1.metric("Best method", best["method"], delta="meets all" if best["meets all"] else "partial")
+    c2.metric("Quality", best["quality"], delta=f"req {acc:.2f}",
+              delta_color="normal" if best["quality ok"] else "inverse")
+    c3.metric("Latency (ms)", best["latency_ms"], delta=f"SLA {sla}",
+              delta_color="normal" if best["SLA ok"] else "inverse")
+    c4.metric("Cost / month", f"${best['cost_usd/mo']:,}", delta=f"budget ${budget:,}",
+              delta_color="normal" if best["budget ok"] else "inverse")
+    st.dataframe(df_sorted, width="stretch", hide_index=True)
+    met = int(df["meets all"].sum())
+    st.caption(f"{met}/{len(df)} selected methods meet all three constraints "
+               f"(quality >= {acc:.2f}, latency <= {sla} ms, cost <= ${budget:,}).")
 else:
     st.info("Pick at least one method in the sidebar.")
