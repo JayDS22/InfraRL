@@ -11,7 +11,7 @@
 #SBATCH --job-name=infrarl-full
 #SBATCH --output=logs/%x-%j.out
 #SBATCH --error=logs/%x-%j.err
-#SBATCH --time=02:00:00
+#SBATCH --time=03:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
@@ -36,5 +36,14 @@ export TOKENIZERS_PARALLELISM=false
 mkdir -p logs results
 echo "[run] host=$(hostname) env=$CONDA_DEFAULT_ENV cpus=${SLURM_CPUS_PER_TASK:-1}"
 echo "[run] git sha=$(git rev-parse --short HEAD 2>/dev/null || echo none)"
-python -m infrarl.evaluation.run_experiment --seeds 3 --ablate ppo --out results
+# 8 agents: random, heuristic, context-free + LinUCB + D-LinUCB bandits,
+# Q-learning, PPO, and Lagrangian PPO (CMDP constrained variant).
+# Ablation sweep on lagrangian_ppo (5 variants x 3 seeds = 15 training runs).
+# Out dir INFRARL_OUT can be overridden via --export at sbatch time.
+: "${INFRARL_OUT:=results_frozen_v1}"
+python -m infrarl.evaluation.run_experiment \
+  --agents random,heuristic,bandit_context_free,bandit_contextual,bandit_discounted,q_learning,ppo,lagrangian_ppo \
+  --seeds 3 \
+  --ablate lagrangian_ppo \
+  --out "$INFRARL_OUT"
 echo "[run] done at $(date)"
