@@ -37,7 +37,7 @@ def run_episode(env: InfraEnv, agent, profile: Profile, train: bool = True) -> E
         a = agent.select_action(obs, mask, explore=train)
         nobs, r, term, trunc, info = env.step(a)
         if train:
-            agent.update(Transition(obs, a, r, nobs, info["action_mask"], term))
+            agent.update(Transition(obs, a, r, nobs, info["action_mask"], term, info))
         obs, mask = nobs, info["action_mask"]
         if term or trunc:
             break

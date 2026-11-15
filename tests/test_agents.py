@@ -95,3 +95,26 @@ def test_discounted_bandit_learns_and_matches_vanilla_on_stationary():
 def test_discounted_bandit_registered():
     from infrarl.agents.registry import REGISTRY
     assert "bandit_discounted" in REGISTRY
+
+
+@pytest.mark.skipif(not _HAS_TORCH, reason="torch not installed")
+def test_lagrangian_ppo_lambda_responds_to_compliance_gap():
+    from infrarl.agents.lagrangian_ppo import LagrangianPPOAgent
+    profiles = generate_profiles(200, 23)
+    env = InfraEnv(profiles)
+    agent = LagrangianPPOAgent(seed=0, compliance_target=0.85,
+                               lambda_lr=0.1, rollout_size=256, update_epochs=2)
+    # train enough to trigger multiple _learn() calls -> multiple dual steps
+    from infrarl.evaluation.experiments import train
+    train(env, agent, profiles, epochs=3, seed=0)
+    assert len(agent.history["lambda"]) >= 1
+    # if compliance is below target, lambda must rise from 0
+    if agent.history["compliance"][0] < 0.85:
+        assert agent.history["lambda"][-1] > 0.0
+    assert 0.0 <= agent.history["lambda"][-1] <= agent.lambda_max
+
+
+@pytest.mark.skipif(not _HAS_TORCH, reason="torch not installed")
+def test_lagrangian_ppo_auto_registered():
+    from infrarl.agents.registry import REGISTRY
+    assert "lagrangian_ppo" in REGISTRY

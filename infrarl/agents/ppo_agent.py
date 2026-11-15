@@ -100,12 +100,23 @@ class PPOAgent(BaseAgent):
         self._pending = (obs.copy(), mask.copy(), a, float(logp.item()), float(value.item()))
         return a
 
+    def _reshape_rewards(self, rews: np.ndarray, dones: np.ndarray,
+                         compliant: np.ndarray) -> np.ndarray:
+        """Hook: subclasses (constrained PPO variants) override to modify terminal
+        rewards before GAE. Base PPO passes rewards through unchanged."""
+        return rews
+
     def update(self, t: Transition) -> None:
         if self._pending is None:
             return
         obs, mask, action, logp, val = self._pending
         assert action == t.action, "PPO transition action does not match the sampled action"
-        self._buf.append((obs, mask, action, logp, val, float(t.reward), bool(t.terminated)))
+        # Store per-transition compliance flag (0 on non-terminal, 0/1 on terminal
+        # based on meets_quality). Subclasses that treat compliance as a constraint
+        # (LagrangianPPOAgent) consume this to compute the dual-ascent signal.
+        compliant = float(t.info.get("meets_quality", False)) if t.terminated else 0.0
+        self._buf.append((obs.copy(), mask.copy(), action, logp, val,
+                          float(t.reward), bool(t.terminated), compliant))
         self._pending = None
         if len(self._buf) >= self.rollout_size and t.terminated:
             self._learn()
@@ -119,6 +130,10 @@ class PPOAgent(BaseAgent):
         vals = np.array([x[4] for x in self._buf], dtype=np.float32)
         rews = np.array([x[5] for x in self._buf], dtype=np.float32)
         dones = np.array([x[6] for x in self._buf], dtype=bool)
+        # compliant[i] = 1 if terminal and meets quality, 0 otherwise. Available to
+        # subclasses via self._buf (slot 7); reshape_rewards() hook lets variants
+        # modify rewards before GAE without re-collecting the rollout.
+        rews = self._reshape_rewards(rews, dones, np.array([x[7] for x in self._buf], dtype=np.float32))
 
         advantages = np.zeros_like(rews)
         gae = 0.0
