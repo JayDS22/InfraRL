@@ -54,3 +54,4 @@ def _try_register(name: str, module: str, cls: str, epochs: int) -> None:
 _try_register("q_learning", "q_learning", "QLearningAgent", 30)
 _try_register("dqn", "dqn_agent", "DQNAgent", 30)
 _try_register("ppo", "ppo_agent", "PPOAgent", 30)
+_try_register("lagrangian_ppo", "lagrangian_ppo", "LagrangianPPOAgent", 30)

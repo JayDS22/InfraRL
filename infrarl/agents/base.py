@@ -2,7 +2,7 @@
 baselines implement this so the evaluation runner has a single code path."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Protocol, runtime_checkable
 
 import numpy as np
@@ -16,6 +16,11 @@ class Transition:
     next_obs: np.ndarray
     next_mask: np.ndarray
     terminated: bool
+    # Optional step info dict. Populated by run_episode; carries quality,
+    # latency_ms, cost_usd, meets_quality, within_budget, meets_sla, stack on
+    # terminals. Used by constrained-RL variants that need per-episode
+    # compliance signals beyond the scalar reward (e.g., LagrangianPPOAgent).
+    info: dict = field(default_factory=dict)
 
 
 @runtime_checkable
