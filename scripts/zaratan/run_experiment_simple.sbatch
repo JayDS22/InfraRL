@@ -40,10 +40,14 @@ echo "[run] git sha=$(git rev-parse --short HEAD 2>/dev/null || echo none)"
 # Q-learning, PPO, and Lagrangian PPO (CMDP constrained variant).
 # Ablation sweep on lagrangian_ppo (5 variants x 3 seeds = 15 training runs).
 # Out dir INFRARL_OUT can be overridden via --export at sbatch time.
-: "${INFRARL_OUT:=results_frozen_v1}"
+# Evaluation on the held-out test split (seed 1000). The frozen_v1 run reported
+# validation-split numbers; Ayan review flagged that the headline must sit on
+# the true held-out set.
+: "${INFRARL_OUT:=results_frozen_v2_test}"
 python -m infrarl.evaluation.run_experiment \
   --agents random,heuristic,bandit_context_free,bandit_contextual,bandit_discounted,q_learning,ppo,lagrangian_ppo \
   --seeds 3 \
   --ablate lagrangian_ppo \
+  --evaluation-split test \
   --out "$INFRARL_OUT"
 echo "[run] done at $(date)"
