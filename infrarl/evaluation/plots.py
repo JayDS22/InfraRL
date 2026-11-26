@@ -134,3 +134,31 @@ def plot_ablation(abl: pd.DataFrame, path: str) -> None:
         ax.set_title(f"Δ {m.replace('_', ' ')}", fontsize=9)
         ax.tick_params(labelsize=7)
     _save(fig, path)
+
+
+def plot_sensitivity(sens: pd.DataFrame, path: str, metric: str = "meets_all") -> None:
+    """One subplot per perturbed axis; x is the multiplicative factor (1.0 = nominal),
+    y is the chosen metric, one line per agent. A ranking that preserves order across
+    panels is the point the plot makes."""
+    axes_order = ("quality", "latency", "cost")
+    fig, axes = plt.subplots(1, len(axes_order), figsize=(4.0 * len(axes_order), 4.0),
+                              sharey=True)
+    nominal = sens[sens["perturbation"] == "nominal"].groupby("agent")[metric].mean()
+    for ax, axis in zip(axes, axes_order):
+        mult_col = f"{axis}_mult"
+        others = [f"{a}_mult" for a in axes_order if a != axis]
+        sub = sens[(sens["perturbation"] == "nominal") |
+                   ((sens[mult_col] != 1.0) & (sens[others[0]] == 1.0) & (sens[others[1]] == 1.0))]
+        pivot = sub.groupby(["agent", mult_col])[metric].mean().unstack(mult_col)
+        if 1.0 not in pivot.columns:
+            pivot[1.0] = pivot.index.map(nominal)
+        pivot = pivot.reindex(sorted(pivot.columns), axis=1)
+        for agent, row in pivot.iterrows():
+            ax.plot(row.index, row.values, marker="o", label=agent)
+        ax.axvline(1.0, color="k", lw=0.6, linestyle=":")
+        ax.set_xlabel(f"{axis} multiplier")
+        ax.set_title(f"perturb {axis}", fontsize=10)
+        ax.tick_params(labelsize=8)
+    axes[0].set_ylabel(metric.replace("_", " "))
+    axes[-1].legend(loc="center left", bbox_to_anchor=(1.02, 0.5), fontsize=8, frameon=False)
+    _save(fig, path)
