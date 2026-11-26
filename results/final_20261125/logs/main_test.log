@@ -1,0 +1,38 @@
+[random seed 0] reward=0.841 budget=0.661 sla=0.609
+[random seed 1] reward=0.832 budget=0.641 sla=0.587
+[random seed 2] reward=0.829 budget=0.650 sla=0.578
+[heuristic seed 0] reward=1.022 budget=0.849 sla=0.838
+[heuristic seed 1] reward=1.022 budget=0.849 sla=0.838
+[heuristic seed 2] reward=1.022 budget=0.849 sla=0.838
+[bandit_context_free seed 0] reward=1.025 budget=0.956 sla=0.703
+[bandit_context_free seed 1] reward=1.034 budget=0.929 sla=0.908
+[bandit_context_free seed 2] reward=1.027 budget=0.814 sla=0.951
+[bandit_contextual seed 0] reward=1.037 budget=0.961 sla=0.819
+[bandit_contextual seed 1] reward=1.041 budget=0.949 sla=0.848
+[bandit_contextual seed 2] reward=0.989 budget=0.947 sla=0.729
+[bandit_discounted seed 0] reward=0.921 budget=0.863 sla=0.425
+[bandit_discounted seed 1] reward=0.968 budget=0.930 sla=0.735
+[bandit_discounted seed 2] reward=0.977 budget=0.952 sla=0.853
+[q_learning seed 0] reward=0.844 budget=0.655 sla=0.606
+[q_learning seed 1] reward=0.835 budget=0.650 sla=0.603
+[q_learning seed 2] reward=0.844 budget=0.667 sla=0.603
+[ppo seed 0] reward=1.036 budget=0.944 sla=0.827
+[ppo seed 1] reward=1.041 budget=0.930 sla=0.906
+[ppo seed 2] reward=1.052 budget=0.917 sla=0.969
+[lagrangian_ppo seed 0] reward=1.071 budget=0.836 sla=0.854
+[lagrangian_ppo seed 1] reward=1.050 budget=0.762 sla=0.898
+[lagrangian_ppo seed 2] reward=1.064 budget=0.772 sla=0.912
+
+Summary (mean over seeds):
+                     quality_compliance  budget_compliance  sla_compliance  meets_all  mean_reward  mean_cost_usd  avg_quality  quality_attainment
+agent                                                                                                                                             
+bandit_context_free               0.575              0.900           0.854      0.439        1.029       1378.080        0.774               0.963
+bandit_contextual                 0.531              0.952           0.799      0.376        1.022       1233.072        0.751               0.951
+bandit_discounted                 0.436              0.915           0.671      0.166        0.956       2081.424        0.724               0.920
+heuristic                         0.636              0.849           0.838      0.460        1.022       1714.896        0.763               0.973
+lagrangian_ppo                    0.891              0.790           0.888      0.635        1.062       3389.808        0.847               0.996
+ppo                               0.552              0.930           0.901      0.468        1.043       1314.576        0.766               0.960
+q_learning                        0.415              0.657           0.604      0.135        0.841       4554.768        0.710               0.896
+random                            0.397              0.651           0.591      0.136        0.834       4543.584        0.708               0.897
+
+Friedman (reward) p-values per seed: ['0.00e+00', '0.00e+00', '0.00e+00']
