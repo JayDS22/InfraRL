@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InfraRL · live demo</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --panel: #ffffff; --line: #e6e5e1; --line2: #d4d3ce;
+    --ink: #0b0b0b; --ink2: #52514e; --muted: #8a8984;
+    --good: #0ca30c; --good-ink: #0a6e0a; --good-bg: #ebf7ea;
+    --bad: #d03b3b; --bad-ink: #a32424; --bad-bg: #fcecec;
+    --oracle: #6250d6;
+    --c-lagrangian_ppo: #2a78d6; --c-ppo: #eb6834; --c-heuristic: #1baf7a;
+    --c-bandit_contextual: #a3a29c; --c-random: #cfcec8;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface); color: var(--ink);
+         font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { display: flex; align-items: center; gap: 16px; padding: 14px 28px;
+           border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 5; }
+  .logo { font-weight: 700; font-size: 20px; letter-spacing: -0.02em; }
+  .logo span { color: var(--c-lagrangian_ppo); }
+  .tagline { color: var(--ink2); }
+  .pill { margin-left: auto; font-size: 12.5px; color: var(--ink2); border: 1px solid var(--line2);
+          border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+  .pill b { color: var(--good-ink); }
+  nav { display: flex; gap: 4px; padding: 0 28px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  nav button { border: 0; background: none; padding: 12px 14px; font: inherit; color: var(--ink2);
+               cursor: pointer; border-bottom: 2px solid transparent; }
+  nav button.on { color: var(--ink); border-bottom-color: var(--ink); font-weight: 600; }
+  main { padding: 24px 28px 40px; }
+  .tab { display: none; } .tab.on { display: block; }
+
+  /* ---------- tab 1 ---------- */
+  .grid { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .chip { border: 1px solid var(--line2); background: var(--panel); border-radius: 999px; padding: 6px 11px;
+          font: inherit; font-size: 13px; cursor: pointer; color: var(--ink); }
+  .chip:hover { border-color: var(--ink2); }
+  .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .blurb { font-size: 13px; color: var(--ink2); min-height: 19px; margin: -6px 0 12px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink2); margin-bottom: 4px; }
+  .field label output { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; accent-color: var(--ink); }
+  select { width: 100%; font: inherit; padding: 7px 8px; border: 1px solid var(--line2); border-radius: 8px; background: var(--panel); }
+  details { margin: 4px 0 14px; } summary { cursor: pointer; font-size: 13px; color: var(--ink2); }
+  .go { width: 100%; border: 0; border-radius: 10px; padding: 12px; font: inherit; font-weight: 600;
+        background: var(--c-lagrangian_ppo); color: #fff; cursor: pointer; font-size: 16px; }
+  .go:hover { filter: brightness(1.07); } .go:disabled { opacity: .6; cursor: wait; }
+
+  .headline { font-size: 20px; font-weight: 600; margin: 2px 0 4px; min-height: 29px; }
+  .sub { color: var(--ink2); margin-bottom: 16px; min-height: 21px; }
+  .lane { display: grid; grid-template-columns: 170px 1fr 300px; gap: 16px; align-items: center;
+          background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+          margin-bottom: 10px; border-left: 4px solid var(--agent); transition: box-shadow .3s; }
+  .lane.win { box-shadow: 0 0 0 2px var(--good) inset; }
+  .who b { display: block; font-size: 15px; } .who span { font-size: 12.5px; color: var(--muted); }
+  .steps { display: flex; flex-wrap: wrap; gap: 6px; min-height: 46px; align-content: center; }
+  .step { font-size: 12.5px; border: 1px solid var(--line2); border-radius: 8px; padding: 3px 8px 4px;
+          background: var(--surface); opacity: 0; transform: translateY(4px); transition: all .25s; }
+  .step.in { opacity: 1; transform: none; }
+  .step small { display: block; font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .checks { display: grid; gap: 4px; opacity: 0; transition: opacity .3s; } .checks.in { opacity: 1; }
+  .chk { display: grid; grid-template-columns: 18px 62px 1fr; gap: 6px; font-size: 13px; align-items: center; }
+  .chk .ic { font-weight: 700; text-align: center; border-radius: 4px; font-size: 12px; line-height: 18px; }
+  .chk.ok .ic { color: #fff; background: var(--good); } .chk.no .ic { color: #fff; background: var(--bad); }
+  .chk .k { color: var(--ink2); } .chk .v { font-variant-numeric: tabular-nums; }
+  .chk.no .v { color: var(--bad-ink); }
+  .verdict { grid-column: 1 / -1; display: none; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: 2px; }
+  .tag.ok { background: var(--good-bg); color: var(--good-ink); } .tag.no { background: var(--bad-bg); color: var(--bad-ink); }
+  .lane.oracle { --agent: var(--oracle); background: #f6f5fd; }
+  .empty { color: var(--muted); padding: 40px; text-align: center; border: 1px dashed var(--line2); border-radius: 12px; }
+
+  /* ---------- tab 2 ---------- */
+  .battlebar { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .battlebar .go { width: auto; padding: 10px 22px; }
+  .seg { display: inline-flex; border: 1px solid var(--line2); border-radius: 10px; overflow: hidden; }
+  .seg button { border: 0; background: var(--panel); padding: 9px 14px; font: inherit; cursor: pointer; border-right: 1px solid var(--line2); }
+  .seg button:last-child { border-right: 0; } .seg button.on { background: var(--ink); color: #fff; }
+  .race { display: grid; gap: 12px; }
+  .row { display: grid; grid-template-columns: 170px 1fr 120px 110px; gap: 16px; align-items: center; }
+  .row .nm b { display: block; } .row .nm span { font-size: 12.5px; color: var(--muted); }
+  .track { position: relative; height: 28px; background: #f1f0ec; border-radius: 6px; }
+  .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--agent);
+          border-radius: 0 4px 4px 0; transition: width .12s linear; }
+  .target { position: absolute; top: -6px; bottom: -6px; width: 0; border-left: 2px dotted var(--ink2); }
+  .pct { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pct small { font-size: 12.5px; color: var(--muted); font-weight: 400; display: block; }
+  .cost { font-variant-numeric: tabular-nums; color: var(--ink2); font-size: 13.5px; }
+  .ticker { margin-top: 22px; font-size: 13.5px; color: var(--ink2); min-height: 22px; }
+  .axisnote { display: grid; grid-template-columns: 170px 1fr 120px 110px; gap: 16px; font-size: 12px; color: var(--muted); }
+  .axisnote div:nth-child(2) { position: relative; height: 16px; }
+  .foot { margin-top: 28px; font-size: 12.5px; color: var(--muted); max-width: 900px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Infra<span>RL</span></div>
+  <div class="tagline">Which AI infrastructure should this customer run on?</div>
+  <div class="pill"><b>●</b> Live: real trained agents · simulated hardware</div>
+</header>
+<nav>
+  <button class="on" data-tab="one">1 · Recommend for one customer</button>
+  <button data-tab="battle">2 · Head-to-head on unseen customers</button>
+</nav>
+
+<main>
+<section class="tab on" id="tab-one">
+  <div class="grid">
+    <div class="card">
+      <h2>Customer</h2>
+      <div class="presets" id="presets"></div>
+      <div class="blurb" id="blurb"></div>
+      <div class="field"><label>Use case</label><select id="use_case"></select></div>
+      <div class="field"><label>Accuracy needed <output id="o_acc"></output></label>
+        <input type="range" id="acc_req" min="0.6" max="0.95" step="0.01"></div>
+      <div class="field"><label>Latency limit (SLA) <output id="o_sla"></output></label>
+        <input type="range" id="sla" min="0" max="1" step="0.001"></div>
+      <div class="field"><label>Monthly budget <output id="o_budget"></output></label>
+        <input type="range" id="budget" min="0" max="1" step="0.001"></div>
+      <div class="field"><label>Monthly queries <output id="o_q"></output></label>
+        <input type="range" id="queries" min="0" max="1" step="0.001"></div>
+      <details><summary>More traffic details</summary>
+        <div class="field" style="margin-top:10px"><label>Peak vs average traffic <output id="o_peak"></output></label>
+          <input type="range" id="peak" min="1" max="6" step="0.5"></div>
+        <div class="field"><label>Avg output tokens <output id="o_out"></output></label>
+          <input type="range" id="out_tok" min="0" max="1" step="0.001"></div>
+        <div class="field"><label>Avg input tokens <output id="o_in"></output></label>
+          <input type="range" id="in_tok" min="0" max="1" step="0.001"></div>
+        <div class="field"><label>Data sensitivity</label><select id="sens"></select></div>
+      </details>
+      <button class="go" id="go">Recommend ▶</button>
+    </div>
+    <div>
+      <div class="headline" id="headline"></div>
+      <div class="sub" id="sub"></div>
+      <div id="lanes"><div class="empty">Pick a customer on the left and press <b>Recommend</b>.<br>
+        Each agent builds a stack in up to 5 decisions; the simulator then scores quality, latency and cost.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="tab" id="tab-battle">
+  <div class="battlebar">
+    <div class="seg" id="nseg"><button data-n="25">25</button><button data-n="50" class="on">50</button><button data-n="100">100</button><button data-n="200">200</button></div>
+    <span style="color:var(--ink2)">unseen test customers</span>
+    <button class="go" id="fight">Run head-to-head ▶</button>
+  </div>
+  <div class="axisnote"><div></div><div><span style="position:absolute;left:0">0%</span><span id="tlabel" style="position:absolute;transform:translateX(-50%)">target 75%</span><span style="position:absolute;right:0">100%</span></div><div>meets all 3</div><div>avg cost / mo</div></div>
+  <div class="race" id="race" style="margin-top:8px"></div>
+  <div class="ticker" id="ticker">Every agent gets the same customers, drawn from the 1,000 held-out test profiles used in our evaluation. None of them were seen in training.</div>
+  <p class="foot">“Meets all 3” = the recommended stack satisfies the customer's accuracy requirement, latency SLA and monthly budget at the same time.
+    Quality, latency and cost come from the InfraRL simulator (uncalibrated lookup tables), not from real hardware.</p>
+</section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const fmt$ = v => "$" + Math.round(v).toLocaleString();
+const fmtN = v => v >= 1e6 ? (v / 1e6).toFixed(v >= 1e7 ? 0 : 1) + "M" : v >= 1e3 ? Math.round(v / 1e3) + "k" : Math.round(v);
+const fmtMs = v => v >= 1000 ? (v / 1000).toFixed(v >= 10000 ? 0 : 1) + " s" : Math.round(v) + " ms";
+const UC = { chatbot: "Chatbot", code_generation: "Code generation", batch_inference: "Batch inference",
+             rag: "RAG / search", agentic: "Agentic", structured_extraction: "Structured extraction" };
+// log-scale sliders: [min, max]
+const LOG = { sla: [200, 30000], budget: [500, 50000], queries: [1e5, 5e7], out_tok: [20, 1000], in_tok: [50, 5000] };
+// snap log-slider values to round numbers so what is shown is exactly what is sent
+const snap = v => { const m = Math.max(1, Math.pow(10, Math.floor(Math.log10(v)) - 1)); return Math.round(v / m) * m; };  // 2 significant figures
+const toLog = (k, t) => snap(Math.exp(Math.log(LOG[k][0]) + t * (Math.log(LOG[k][1]) - Math.log(LOG[k][0]))));
+const fromLog = (k, v) => (Math.log(v) - Math.log(LOG[k][0])) / (Math.log(LOG[k][1]) - Math.log(LOG[k][0]));
+let META, users = 300, currentPreset = null;
+
+function readProfile() {
+  return {
+    use_case: $("#use_case").value, acc_req: +$("#acc_req").value,
+    latency_sla_ms: toLog("sla", +$("#sla").value), monthly_budget_usd: toLog("budget", +$("#budget").value),
+    monthly_queries: toLog("queries", +$("#queries").value), peak_multiplier: +$("#peak").value,
+    avg_output_tokens: toLog("out_tok", +$("#out_tok").value), avg_input_tokens: toLog("in_tok", +$("#in_tok").value),
+    data_sensitivity: $("#sens").value, concurrent_users: users,
+  };
+}
+function setProfile(p) {
+  $("#use_case").value = p.use_case; $("#acc_req").value = p.acc_req;
+  $("#sla").value = fromLog("sla", p.latency_sla_ms); $("#budget").value = fromLog("budget", p.monthly_budget_usd);
+  $("#queries").value = fromLog("queries", p.monthly_queries); $("#peak").value = p.peak_multiplier;
+  $("#out_tok").value = fromLog("out_tok", p.avg_output_tokens); $("#in_tok").value = fromLog("in_tok", p.avg_input_tokens);
+  $("#sens").value = p.data_sensitivity; users = p.concurrent_users; refreshLabels();
+}
+function refreshLabels() {
+  const p = readProfile();
+  $("#o_acc").textContent = p.acc_req.toFixed(2); $("#o_sla").textContent = fmtMs(p.latency_sla_ms);
+  $("#o_budget").textContent = fmt$(p.monthly_budget_usd); $("#o_q").textContent = fmtN(p.monthly_queries);
+  $("#o_peak").textContent = p.peak_multiplier.toFixed(1) + "×"; $("#o_out").textContent = Math.round(p.avg_output_tokens);
+  $("#o_in").textContent = Math.round(p.avg_input_tokens);
+}
+function markPreset(id, blurb) {
+  currentPreset = id;
+  document.querySelectorAll("#presets .chip").forEach(c => c.classList.toggle("on", c.dataset.id === id));
+  $("#blurb").textContent = blurb || "";
+}
+
+async function init() {
+  META = await (await fetch("/api/meta")).json();
+  $("#use_case").innerHTML = META.use_cases.map(u => `<option value="${u}">${UC[u] || u}</option>`).join("");
+  $("#sens").innerHTML = META.sensitivity.map(s => `<option>${s}</option>`).join("");
+  const box = $("#presets");
+  META.presets.forEach(pr => {
+    const b = document.createElement("button"); b.className = "chip"; b.textContent = pr.name; b.dataset.id = pr.id;
+    b.onclick = () => { setProfile(pr.profile); markPreset(pr.id, pr.blurb); recommend(); };
+    box.appendChild(b);
+  });
+  const r = document.createElement("button"); r.className = "chip"; r.textContent = "🎲 Random test customer"; r.dataset.id = "random";
+  r.onclick = async () => {
+    const d = await (await fetch("/api/random_customer")).json();
+    setProfile(d.profile); markPreset("random", `Test customer #${d.index} from the held-out set`); recommend();
+  };
+  box.appendChild(r);
+  document.querySelectorAll("#tab-one input, #tab-one select").forEach(el =>
+    el.addEventListener("input", () => { refreshLabels(); if (currentPreset) markPreset(null, "Custom customer"); }));
+  setProfile(META.presets[0].profile); markPreset(META.presets[0].id, META.presets[0].blurb);
+  $("#go").onclick = recommend;
+  buildRace();
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function checkRow(ok, k, val, need) {
+  return `<div class="chk ${ok ? "ok" : "no"}"><span class="ic">${ok ? "✓" : "✗"}</span><span class="k">${k}</span>
+          <span class="v">${val} <span style="color:var(--muted)">/ ${need}</span></span></div>`;
+}
+function stackSteps(r) {
+  if (r.decisions) return r.decisions.map(d => ({ step: d.step, choice: d.choice }));
+  const s = [{ step: "Architecture", choice: r.tiers.length === 1 ? "Single tier" : `${r.tiers.length}-tier router` }];
+  r.tiers.forEach((t, i) => s.push({ step: "Tier " + (i + 1), choice: `${t.hardware} · ${t.model} · ${t.precision}` }));
+  s.push({ step: "Scaling", choice: r.scaling }); return s;
+}
+function lane(key, name, desc, r, prof, isOracle) {
+  const el = document.createElement("div");
+  el.className = "lane" + (isOracle ? " oracle" : "");
+  el.style.setProperty("--agent", `var(--c-${key})`);
+  const missing = [!r.meets_quality && "accuracy", !r.meets_sla && "latency", !r.within_budget && "budget"].filter(Boolean);
+  el.innerHTML = `
+    <div class="who"><b>${name}</b><span>${desc}</span></div>
+    <div class="steps">${stackSteps(r).map(s => `<div class="step"><small>${s.step}</small>${s.choice}</div>`).join("")}</div>
+    <div class="checks">
+      ${checkRow(r.meets_quality, "Accuracy", r.quality.toFixed(2), "need " + prof.acc_req.toFixed(2))}
+      ${checkRow(r.meets_sla, "Latency", fmtMs(r.latency_ms), "limit " + fmtMs(prof.latency_sla_ms))}
+      ${checkRow(r.within_budget, "Cost", fmt$(r.cost_usd), "budget " + fmt$(prof.monthly_budget_usd))}
+    </div>`;
+  el.querySelector(".who b").insertAdjacentHTML("beforeend",
+    r.meets_all ? `<span class="tag ok">✓ meets all</span>` : `<span class="tag no">✗ misses ${missing.join(", ")}</span>`);
+  el.querySelector(".tag").style.display = "none";
+  return el;
+}
+async function recommend() {
+  const btn = $("#go"); btn.disabled = true; btn.textContent = "Agents are deciding…";
+  const prof = readProfile();
+  try {
+    const d = await (await fetch("/api/recommend", { method: "POST", headers: { "Content-Type": "application/json" },
+                                                       body: JSON.stringify(prof) })).json();
+    const box = $("#lanes"); box.innerHTML = "";
+    $("#headline").textContent = ""; $("#sub").textContent = "";
+    const lanes = [];
+    for (const a of META.agents) {
+      if (!d.results[a.key]) continue;
+      const el = lane(a.key, a.name, a.desc, d.results[a.key], prof, false); box.appendChild(el); lanes.push([el, d.results[a.key]]);
+    }
+    const o = d.oracle;
+    const oel = lane("oracle", "Exhaustive search", `Tries all ${o.searched.toLocaleString()} 1–2 tier setups`, o, prof, true);
+    box.appendChild(oel); lanes.push([oel, o]);
+    // reveal decisions step by step, all lanes in parallel
+    const maxSteps = Math.max(...lanes.map(([el]) => el.querySelectorAll(".step").length));
+    for (let i = 0; i < maxSteps; i++) {
+      lanes.forEach(([el]) => { const s = el.querySelectorAll(".step")[i]; if (s) s.classList.add("in"); });
+      await sleep(170);
+    }
+    lanes.forEach(([el, r]) => { el.querySelector(".checks").classList.add("in"); el.querySelector(".tag").style.display = "";
+                                 if (r.meets_all && el !== oel) el.classList.add("win"); });
+    const agents = META.agents.filter(a => d.results[a.key]);
+    const winners = agents.filter(a => d.results[a.key].meets_all);
+    $("#headline").textContent = `${winners.length} of ${agents.length} agents meet every requirement`;
+    const ours = d.results.lagrangian_ppo;
+    if (ours) {
+      $("#sub").textContent = ours.meets_all
+        ? `Lagrangian PPO found a working stack in ${ours.decisions.length} decisions (${fmt$(ours.cost_usd)}/mo). ` +
+          `The exhaustive search's best pick costs ${fmt$(o.cost_usd)}/mo.`
+        : (o.meets_all ? "Lagrangian PPO misses here, but a working stack exists. RL is not perfect: 65% overall on the test set."
+                       : "No 1–2 tier setup satisfies all three requirements for this customer.");
+    }
+  } finally { btn.disabled = false; btn.textContent = "Recommend ▶"; }
+}
+
+/* ---------- head-to-head ---------- */
+let N = 50;
+document.querySelectorAll("#nseg button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#nseg button").forEach(x => x.classList.toggle("on", x === b)); N = +b.dataset.n; });
+function buildRace() {
+  const race = $("#race"); race.innerHTML = "";
+  META.agents.forEach(a => {
+    const row = document.createElement("div"); row.className = "row"; row.id = "r-" + a.key;
+    row.style.setProperty("--agent", `var(--c-${a.key})`);
+    row.innerHTML = `<div class="nm"><b>${a.name}</b><span>${a.desc}</span></div>
+      <div class="track"><div class="fill"></div><div class="target" style="left:75%"></div></div>
+      <div class="pct">–<small>&nbsp;</small></div><div class="cost">–</div>`;
+    race.appendChild(row);
+  });
+  $("#tlabel").style.left = "75%";
+}
+$("#fight").onclick = async () => {
+  const btn = $("#fight"); btn.disabled = true; btn.textContent = "Running…"; buildRace();
+  const d = await (await fetch("/api/battle", { method: "POST", headers: { "Content-Type": "application/json" },
+                                                 body: JSON.stringify({ n: N, seed: Math.floor(Math.random() * 1e6) }) })).json();
+  const tally = {}; META.agents.forEach(a => tally[a.key] = { ok: 0, cost: 0 });
+  const delay = Math.max(15, Math.min(80, 3000 / d.rows.length));
+  for (let i = 0; i < d.rows.length; i++) {
+    const row = d.rows[i];
+    for (const [k, r] of Object.entries(row.agents)) { tally[k].ok += r.meets_all ? 1 : 0; tally[k].cost += r.cost_usd; }
+    const n = i + 1;
+    META.agents.forEach(a => {
+      const t = tally[a.key], el = $("#r-" + a.key); if (!row.agents[a.key]) return;
+      el.querySelector(".fill").style.width = (100 * t.ok / n) + "%";
+      el.querySelector(".pct").innerHTML = `${Math.round(100 * t.ok / n)}%<small>${t.ok} of ${n}</small>`;
+      el.querySelector(".cost").textContent = fmt$(t.cost / n);
+    });
+    $("#ticker").textContent = `Customer ${n} of ${d.rows.length}: test #${row.index}, ${UC[row.use_case] || row.use_case}, ` +
+      `needs accuracy ${row.acc_req.toFixed(2)}, latency ≤ ${fmtMs(row.sla_ms)}, budget ${fmt$(row.budget)}/mo`;
+    await sleep(delay);
+  }
+  const best = META.agents.map(a => [a, tally[a.key].ok]).sort((x, y) => y[1] - x[1])[0];
+  $("#ticker").innerHTML = `<b>${best[0].name}</b> met all three requirements for ${best[1]} of ${d.rows.length} unseen customers ` +
+    `(${Math.round(100 * best[1] / d.rows.length)}%). Official evaluation (all 1,000 test customers, 3 seeds): Lagrangian PPO 65%, PPO 48%, heuristic 46%.`;
+  btn.disabled = false; btn.textContent = "Run again ▶";
+};
+
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.id === "tab-" + b.dataset.tab));
+});
+init();
+</script>
+</body>
+</html>
