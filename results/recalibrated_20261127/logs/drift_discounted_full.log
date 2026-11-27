@@ -1,0 +1,5 @@
+[drift seed 0] static weekly: [0.876, 0.772, 0.668, 0.635]  online weekly: [0.88, 0.767, 0.652, 0.631]
+[drift seed 1] static weekly: [0.881, 0.782, 0.675, 0.648]  online weekly: [0.879, 0.779, 0.67, 0.636]
+[drift seed 2] static weekly: [0.845, 0.744, 0.598, 0.645]  online weekly: [0.847, 0.747, 0.679, 0.686]
+
+Overall mean reward (over 3 seeds): static 0.731  online 0.738  delta +0.007

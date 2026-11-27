@@ -1,0 +1,90 @@
+{
+  "agents": [
+    "heuristic",
+    "bandit_contextual",
+    "ppo",
+    "lagrangian_ppo"
+  ],
+  "axes": [
+    "quality",
+    "latency",
+    "cost"
+  ],
+  "factors": [
+    0.8,
+    0.9,
+    1.1,
+    1.2
+  ],
+  "n_test": 1000,
+  "n_train": 1000,
+  "perturbations": [
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 1.0,
+      "quality_mult": 1.0
+    },
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 1.0,
+      "quality_mult": 0.8
+    },
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 1.0,
+      "quality_mult": 0.9
+    },
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 1.0,
+      "quality_mult": 1.1
+    },
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 1.0,
+      "quality_mult": 1.2
+    },
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 0.8,
+      "quality_mult": 1.0
+    },
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 0.9,
+      "quality_mult": 1.0
+    },
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 1.1,
+      "quality_mult": 1.0
+    },
+    {
+      "cost_mult": 1.0,
+      "latency_mult": 1.2,
+      "quality_mult": 1.0
+    },
+    {
+      "cost_mult": 0.8,
+      "latency_mult": 1.0,
+      "quality_mult": 1.0
+    },
+    {
+      "cost_mult": 0.9,
+      "latency_mult": 1.0,
+      "quality_mult": 1.0
+    },
+    {
+      "cost_mult": 1.1,
+      "latency_mult": 1.0,
+      "quality_mult": 1.0
+    },
+    {
+      "cost_mult": 1.2,
+      "latency_mult": 1.0,
+      "quality_mult": 1.0
+    }
+  ],
+  "seeds": 3,
+  "test_seed": 1000
+}

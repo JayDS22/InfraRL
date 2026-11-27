@@ -9,9 +9,11 @@ def _chatbot():
     return Profile("chatbot", 1e5, 500, 0.80, 2000, "low", 1.0, 100, 200, 50)
 
 
-def test_matches_demo_smoke_test():
+def test_recalibrated_reference_point():
+    # Pinned after the 2026-11-27 recalibration (docs/EXTERNAL_REFERENCE_CHECK.md).
+    # Pre-recalibration placeholder values (matching demo.py) were (0.85, 400, 1728).
     q, l, c = estimate(Stack((Tier("a100", "13b", "fp16"),), "static"), _chatbot())
-    assert (round(q, 2), round(l), round(c)) == (0.85, 400, 1728)
+    assert (round(q, 2), round(l), round(c)) == (0.80, 6557, 1937)
 
 
 def test_memory_feasibility():
