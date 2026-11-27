@@ -95,6 +95,14 @@
   .ticker { margin-top: 22px; font-size: 13.5px; color: var(--ink2); min-height: 22px; }
   .axisnote { display: grid; grid-template-columns: 170px 1fr 120px 110px; gap: 16px; font-size: 12px; color: var(--muted); }
   .axisnote div:nth-child(2) { position: relative; height: 16px; }
+  .simtoggle { display: inline-flex; border: 1px solid var(--line2); border-radius: 999px; padding: 3px; gap: 2px; margin-left: auto; background: var(--surface); }
+  .simtoggle button { border: 0; background: none; font: inherit; font-size: 13px; padding: 5px 12px; border-radius: 999px; cursor: pointer; color: var(--ink2); }
+  .simtoggle button.on { background: var(--ink); color: #fff; }
+  .simnote { padding: 8px 28px; font-size: 13px; border-bottom: 1px solid var(--line); }
+  .simnote.placeholder { background: #fff8e6; color: #6b4d00; }
+  .simnote.calibrated { background: var(--good-bg); color: var(--good-ink); }
+  .row.best { --agent: var(--oracle); }
+  .row.best .nm b { color: var(--oracle); }
   .foot { margin-top: 28px; font-size: 12.5px; color: var(--muted); max-width: 900px; }
 </style>
 </head>
@@ -102,8 +110,12 @@
 <header>
   <div class="logo">Infra<span>RL</span></div>
   <div class="tagline">Which AI infrastructure should this customer run on?</div>
-  <div class="pill"><b>●</b> Live: real trained agents · simulated hardware</div>
+  <div class="simtoggle" id="simtoggle" role="group" aria-label="Simulator">
+    <button data-sim="placeholder">Placeholder numbers</button>
+    <button data-sim="calibrated">Real data (calibrated)</button>
+  </div>
 </header>
+<div class="simnote" id="simnote"></div>
 <nav>
   <button class="on" data-tab="one">1 · Recommend for one customer</button>
   <button data-tab="battle">2 · Head-to-head on unseen customers</button>
@@ -155,7 +167,7 @@
   <div class="race" id="race" style="margin-top:8px"></div>
   <div class="ticker" id="ticker">Every agent gets the same customers, drawn from the 1,000 held-out test profiles used in our evaluation. None of them were seen in training.</div>
   <p class="foot">“Meets all 3” = the recommended stack satisfies the customer's accuracy requirement, latency SLA and monthly budget at the same time.
-    Quality, latency and cost come from the InfraRL simulator (uncalibrated lookup tables), not from real hardware.</p>
+    Quality, latency and cost come from the InfraRL simulator selected at the top (placeholder or calibrated tables), not from live hardware. “Best possible” = some 1–2 tier setup meets all three for that customer.</p>
 </section>
 </main>
 
@@ -172,7 +184,20 @@ const LOG = { sla: [200, 30000], budget: [500, 50000], queries: [1e5, 5e7], out_
 const snap = v => { const m = Math.max(1, Math.pow(10, Math.floor(Math.log10(v)) - 1)); return Math.round(v / m) * m; };  // 2 significant figures
 const toLog = (k, t) => snap(Math.exp(Math.log(LOG[k][0]) + t * (Math.log(LOG[k][1]) - Math.log(LOG[k][0]))));
 const fromLog = (k, v) => (Math.log(v) - Math.log(LOG[k][0])) / (Math.log(LOG[k][1]) - Math.log(LOG[k][0]));
-let META, users = 300, currentPreset = null;
+let META, users = 300, currentPreset = null, SIM = "calibrated", lastRan = false;
+const SIMNOTE = {
+  placeholder: "<b>Placeholder simulator</b> (original tables, interim report): GPUs are modelled about 18× faster than real hardware, so latency targets are easy. Agents here were trained on this simulator.",
+  calibrated: "<b>Calibrated simulator</b>: prices, speeds and model quality refit to 29 public references (AWS, Lambda, Nebius, Runpod prices; measured llama.cpp speeds; Qwen2.5 benchmarks). Agents here were trained on this simulator."
+};
+function setSim(s) {
+  SIM = s;
+  document.querySelectorAll("#simtoggle button").forEach(b => b.classList.toggle("on", b.dataset.sim === s));
+  const n = $("#simnote"); n.className = "simnote " + s; n.innerHTML = SIMNOTE[s] +
+    " <span style='opacity:.8'>Live: real trained agents; quality, latency and cost come from the simulator.</span>";
+  buildRace();
+  $("#ticker").textContent = "Every agent gets the same customers, drawn from the 1,000 held-out test profiles used in our evaluation. None of them were seen in training.";
+  if (lastRan) recommend();
+}
 
 function readProfile() {
   return {
@@ -223,10 +248,12 @@ async function init() {
     el.addEventListener("input", () => { refreshLabels(); if (currentPreset) markPreset(null, "Custom customer"); }));
   setProfile(META.presets[0].profile); markPreset(META.presets[0].id, META.presets[0].blurb);
   $("#go").onclick = recommend;
-  buildRace();
+  document.querySelectorAll("#simtoggle button").forEach(b => b.onclick = () => setSim(b.dataset.sim));
+  setSim(SIM);
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const officialOf = k => META.sims.find(x => x.key === SIM).official[k];
 function checkRow(ok, k, val, need) {
   return `<div class="chk ${ok ? "ok" : "no"}"><span class="ic">${ok ? "✓" : "✗"}</span><span class="k">${k}</span>
           <span class="v">${val} <span style="color:var(--muted)">/ ${need}</span></span></div>`;
@@ -260,7 +287,8 @@ async function recommend() {
   const prof = readProfile();
   try {
     const d = await (await fetch("/api/recommend", { method: "POST", headers: { "Content-Type": "application/json" },
-                                                       body: JSON.stringify(prof) })).json();
+                                                       body: JSON.stringify({ ...prof, sim: SIM }) })).json();
+    lastRan = true;
     const box = $("#lanes"); box.innerHTML = "";
     $("#headline").textContent = ""; $("#sub").textContent = "";
     const lanes = [];
@@ -287,8 +315,8 @@ async function recommend() {
       $("#sub").textContent = ours.meets_all
         ? `Lagrangian PPO found a working stack in ${ours.decisions.length} decisions (${fmt$(ours.cost_usd)}/mo). ` +
           `The exhaustive search's best pick costs ${fmt$(o.cost_usd)}/mo.`
-        : (o.meets_all ? "Lagrangian PPO misses here, but a working stack exists. RL is not perfect: 65% overall on the test set."
-                       : "No 1–2 tier setup satisfies all three requirements for this customer.");
+        : (o.meets_all ? `Lagrangian PPO misses here, but a working stack exists (it meets all three for ${Math.round(100 * officialOf("lagrangian_ppo"))}% of test customers under this simulator).`
+                       : "No 1–2 tier setup satisfies all three requirements for this customer under this simulator.");
     }
   } finally { btn.disabled = false; btn.textContent = "Recommend ▶"; }
 }
@@ -307,18 +335,25 @@ function buildRace() {
       <div class="pct">–<small>&nbsp;</small></div><div class="cost">–</div>`;
     race.appendChild(row);
   });
+  const best = document.createElement("div"); best.className = "row best"; best.id = "r-best";
+  best.innerHTML = `<div class="nm"><b>Best possible</b><span>Any 1–2 tier setup works</span></div>
+    <div class="track"><div class="fill"></div><div class="target" style="left:75%"></div></div>
+    <div class="pct">–<small>&nbsp;</small></div><div class="cost">ceiling</div>`;
+  race.appendChild(best);
   $("#tlabel").style.left = "75%";
 }
 $("#fight").onclick = async () => {
   const btn = $("#fight"); btn.disabled = true; btn.textContent = "Running…"; buildRace();
   const d = await (await fetch("/api/battle", { method: "POST", headers: { "Content-Type": "application/json" },
-                                                 body: JSON.stringify({ n: N, seed: Math.floor(Math.random() * 1e6) }) })).json();
-  const tally = {}; META.agents.forEach(a => tally[a.key] = { ok: 0, cost: 0 });
+                                                 body: JSON.stringify({ n: N, sim: SIM, seed: Math.floor(Math.random() * 1e6) }) })).json();
+  const tally = {}; META.agents.forEach(a => tally[a.key] = { ok: 0, cost: 0 }); let possible = 0;
   const delay = Math.max(15, Math.min(80, 3000 / d.rows.length));
   for (let i = 0; i < d.rows.length; i++) {
     const row = d.rows[i];
     for (const [k, r] of Object.entries(row.agents)) { tally[k].ok += r.meets_all ? 1 : 0; tally[k].cost += r.cost_usd; }
-    const n = i + 1;
+    const n = i + 1; possible += row.possible ? 1 : 0;
+    const bel = $("#r-best"); bel.querySelector(".fill").style.width = (100 * possible / n) + "%";
+    bel.querySelector(".pct").innerHTML = `${Math.round(100 * possible / n)}%<small>${possible} of ${n}</small>`;
     META.agents.forEach(a => {
       const t = tally[a.key], el = $("#r-" + a.key); if (!row.agents[a.key]) return;
       el.querySelector(".fill").style.width = (100 * t.ok / n) + "%";
@@ -331,7 +366,9 @@ $("#fight").onclick = async () => {
   }
   const best = META.agents.map(a => [a, tally[a.key].ok]).sort((x, y) => y[1] - x[1])[0];
   $("#ticker").innerHTML = `<b>${best[0].name}</b> met all three requirements for ${best[1]} of ${d.rows.length} unseen customers ` +
-    `(${Math.round(100 * best[1] / d.rows.length)}%). Official evaluation (all 1,000 test customers, 3 seeds): Lagrangian PPO 65%, PPO 48%, heuristic 46%.`;
+    `(${Math.round(100 * best[1] / d.rows.length)}%); for ${possible} of them (${Math.round(100 * possible / d.rows.length)}%) any working setup exists at all. ` +
+    `Official evaluation under this simulator (all 1,000 test customers, 3 seeds): ` +
+    META.agents.filter(a => a.key !== "random").map(a => `${a.name} ${Math.round(100 * officialOf(a.key))}%`).join(", ") + ".";
   btn.disabled = false; btn.textContent = "Run again ▶";
 };
 

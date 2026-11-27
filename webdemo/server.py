@@ -1,6 +1,7 @@
 """InfraRL live demo server.
 
-    python -m webdemo.pretrain      # once (~10 min): trains and saves the demo agents
+    python -m webdemo.pretrain --sim placeholder   # once per simulator (~1 min each)
+    python -m webdemo.pretrain --sim calibrated
     python -m webdemo.server        # then open http://localhost:8501
 
 Everything shown is computed live: the saved agents choose a stack step by step in
@@ -30,11 +31,13 @@ from infrarl.simulator.hardware import HARDWARE, HARDWARE_NAMES
 from infrarl.simulator.models import MODEL_NAMES, PRECISION_NAMES, USE_CASES
 from infrarl.simulator.profiles import SENSITIVITY, Profile, generate_profiles
 
+from . import sim_versions
+
 HERE = Path(__file__).resolve().parent
 TEST_SEED = 1000  # held-out test profiles used by the evaluation harness
 
 AGENTS = [  # (key, display name, one-line description); order = display order
-    ("lagrangian_ppo", "Lagrangian PPO", "Constrained RL, our best model"),
+    ("lagrangian_ppo", "Lagrangian PPO", "Constrained RL (quality as a hard constraint)"),
     ("ppo", "PPO", "Policy-gradient RL"),
     ("heuristic", "Heuristic", "Hand-written rules"),
     ("bandit_contextual", "LinUCB bandit", "Contextual bandit"),
@@ -69,18 +72,24 @@ ARCH_LABEL = {1: "Single tier", 2: "Two-tier router", 3: "Three-tier router"}
 SCALE_LABEL = {"static": "Static (peak)", "conservative": "Autoscale, safe", "aggressive": "Autoscale, lean"}
 STEP_NAME = {STEP_ARCH: "Architecture", STEP_HW: "Hardware", STEP_MODEL: "Model", STEP_PREC: "Precision"}
 
-_lock = threading.Lock()
-_agents: dict[str, object] = {}
+_lock = threading.Lock()  # guards the simulator tables: apply() + compute happen under it
+_agents: dict[str, dict[str, object]] = {}  # sim -> agent key -> agent
 _test_profiles = generate_profiles(1000, seed=TEST_SEED)
 _env = InfraEnv(_test_profiles)
 
 
 def load_agents() -> None:
-    for key, *_ in AGENTS:
-        path = HERE / "models" / f"{key}.pkl"
-        if path.exists():
-            with open(path, "rb") as f:
-                _agents[key] = pickle.load(f)
+    for sim in sim_versions.SIMS:
+        _agents[sim] = {}
+        for key, *_ in AGENTS:
+            path = HERE / "models" / sim / f"{key}.pkl"
+            if path.exists():
+                with open(path, "rb") as f:
+                    _agents[sim][key] = pickle.load(f)
+
+
+def _sim(name) -> str:
+    return name if name in sim_versions.SIMS else "placeholder"
 
 
 def _choice_label(action: int) -> str:
@@ -108,9 +117,10 @@ def _scores(stack: Stack, q: float, lat: float, cost: float, profile: Profile) -
     }
 
 
-def run_agent(key: str, profile: Profile) -> dict:
-    """Greedy episode for one agent; records every decision it makes."""
-    agent = _agents[key]
+def run_agent(sim: str, key: str, profile: Profile) -> dict:
+    """Greedy episode for one agent; records every decision it makes. Caller holds _lock
+    and has applied `sim`."""
+    agent = _agents[sim][key]
     env = _env
     obs, info = env.reset(options={"profile": profile})
     agent.begin_episode(profile)
@@ -150,6 +160,17 @@ def oracle(profile: Profile) -> dict:
     return {"searched": n, **_scores(st, q, lat, cost, profile)}
 
 
+def any_meets_all(profile: Profile) -> bool:
+    """True if any 1- or 2-tier stack satisfies quality, SLA and budget together."""
+    for k in (1, 2):
+        for tiers in itertools.product(_FEASIBLE_TIERS, repeat=k):
+            for sc in SCALING_POLICIES:
+                q, lat, cost = estimate(Stack(tuple(tiers), sc), profile)
+                if q >= profile.acc_req and lat <= profile.latency_sla_ms and cost <= profile.monthly_budget_usd:
+                    return True
+    return False
+
+
 def _profile_from(d: dict) -> Profile:
     return Profile(
         use_case=d["use_case"], monthly_queries=float(d["monthly_queries"]),
@@ -162,17 +183,21 @@ def _profile_from(d: dict) -> Profile:
 
 async def meta(_: Request) -> JSONResponse:
     return JSONResponse({
-        "agents": [{"key": k, "name": n, "desc": d, "loaded": k in _agents} for k, n, d in AGENTS],
+        "agents": [{"key": k, "name": n, "desc": d} for k, n, d in AGENTS],
+        "sims": [{"key": k, "label": v["label"], "official": v["official"],
+                  "loaded": sorted(_agents.get(k, {}))} for k, v in sim_versions.SIMS.items()],
         "use_cases": list(USE_CASES), "sensitivity": list(SENSITIVITY), "presets": PRESETS,
     })
 
 
 async def recommend(request: Request) -> JSONResponse:
-    profile = _profile_from(await request.json())
+    body = await request.json()
+    sim, profile = _sim(body.get("sim")), _profile_from(body)
     with _lock:
-        results = {k: run_agent(k, profile) for k, *_ in AGENTS if k in _agents}
+        sim_versions.apply(sim)
+        results = {k: run_agent(sim, k, profile) for k, *_ in AGENTS if k in _agents[sim]}
         best = oracle(profile)
-    return JSONResponse({"profile": asdict(profile), "results": results, "oracle": best})
+    return JSONResponse({"sim": sim, "profile": asdict(profile), "results": results, "oracle": best})
 
 
 async def random_customer(request: Request) -> JSONResponse:
@@ -184,22 +209,25 @@ async def random_customer(request: Request) -> JSONResponse:
 async def battle(request: Request) -> JSONResponse:
     """All agents on n unseen held-out test customers (the same set the evaluation uses)."""
     body = await request.json()
+    sim = _sim(body.get("sim"))
     n = max(1, min(int(body.get("n", 50)), 300))
     rng = np.random.default_rng(int(body.get("seed", 0)))
     idx = rng.choice(len(_test_profiles), size=n, replace=False)
     rows = []
     with _lock:
+        sim_versions.apply(sim)
         for i in idx:
             p = _test_profiles[int(i)]
             row = {"index": int(i), "use_case": p.use_case, "acc_req": p.acc_req,
-                   "budget": p.monthly_budget_usd, "sla_ms": p.latency_sla_ms, "agents": {}}
+                   "budget": p.monthly_budget_usd, "sla_ms": p.latency_sla_ms, "agents": {},
+                   "possible": any_meets_all(p)}
             for k, *_ in AGENTS:
-                if k in _agents:
-                    r = run_agent(k, p)
+                if k in _agents[sim]:
+                    r = run_agent(sim, k, p)
                     row["agents"][k] = {kk: r[kk] for kk in ("meets_all", "meets_quality", "meets_sla",
                                                              "within_budget", "cost_usd", "reward")}
             rows.append(row)
-    return JSONResponse({"n": n, "rows": rows})
+    return JSONResponse({"sim": sim, "n": n, "rows": rows})
 
 
 async def index(_: Request) -> FileResponse:
@@ -224,7 +252,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8501)
     args = ap.parse_args()
-    missing = [k for k, *_ in AGENTS if k not in _agents]
-    if missing:
-        print(f"[webdemo] not trained yet (run python -m webdemo.pretrain): {missing}")
+    for sim in sim_versions.SIMS:
+        missing = [k for k, *_ in AGENTS if k not in _agents[sim]]
+        if missing:
+            print(f"[webdemo] {sim}: not trained yet (python -m webdemo.pretrain --sim {sim}): {missing}")
     uvicorn.run(app, host="127.0.0.1", port=args.port, log_level="warning")
