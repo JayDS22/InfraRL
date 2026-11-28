@@ -1,0 +1,30 @@
+axis,sim_key,reference,units,source_name,source_url,retrieved,detail
+price,cpu,1.058,USD/hr,AWS EC2 r7i.4xlarge (16 vCPU 128 GiB) on-demand via Vantage,https://instances.vantage.sh/aws/ec2/r7i.4xlarge,2026-11-27,page updated 11/27/2026; region not labelled on page (Vantage default)
+price,a10,1.006,USD/hr,AWS EC2 g5.xlarge (1x A10G 24 GiB) on-demand via Vantage,https://instances.vantage.sh/aws/ec2/g5.xlarge,2026-11-27,A10G is the AWS variant of A10
+price,a10,1.29,USD/hr,Lambda 1x NVIDIA A10 24 GB,https://lambda.com/pricing,2026-11-27,per GPU-hour
+price,a100,3.431,USD/hr,AWS EC2 p4de.24xlarge (8x A100 80 GB) on-demand via Vantage,https://instances.vantage.sh/aws/ec2/p4de.24xlarge,2026-11-27,$27.447/hr divided by 8 GPUs
+price,a100,3.19,USD/hr,Lambda NVIDIA HGX A100 80 GB,https://lambda.com/pricing,2026-11-27,per GPU-hour (8x instance)
+price,a100,2.19,USD/hr,Runpod A100 SXM 80 GB (Secure Cloud pod),https://www.runpod.io/pricing,2026-11-27,page updated 2026-11-12
+price,a100,2.09,USD/hr,Runpod A100 PCIe 80 GB (Secure Cloud pod),https://www.runpod.io/pricing,2026-11-27,page updated 2026-11-12
+price,h100,6.88,USD/hr,AWS EC2 p5.48xlarge (8x H100 80 GB) on-demand via Vantage,https://instances.vantage.sh/aws/ec2/p5.48xlarge,2026-11-27,$55.04/hr divided by 8 GPUs
+price,h100,4.50,USD/hr,Nebius NVIDIA HGX H100 on-demand,https://nebius.com/prices,2026-11-27,per GPU-hour
+price,h100,4.59,USD/hr,Lambda NVIDIA HGX H100 80 GB,https://lambda.com/pricing,2026-11-27,per GPU-hour (8x instance)
+price,h100,4.39,USD/hr,Runpod H100 SXM 80 GB (Secure Cloud pod),https://www.runpod.io/pricing,2026-11-27,page updated 2026-11-12
+decode_tps,a100|7b|fp16,53.18,tokens/s,llama.cpp llama-bench tg1024 Llama 3 8B F16 on A100 SXM 80GB,https://github.com/XiongjieDai/GPU-Benchmarks-on-LLM-Inference,2026-11-27,batch 1 single stream; snapshot May 2024; 8B mapped to sim 7b bucket
+decode_tps,a100|7b|int4,133.38,tokens/s,llama.cpp llama-bench tg1024 Llama 3 8B Q4_K_M on A100 SXM 80GB,https://github.com/XiongjieDai/GPU-Benchmarks-on-LLM-Inference,2026-11-27,Q4_K_M (~4.8 bit) mapped to sim int4
+decode_tps,a100|70b|int4,24.33,tokens/s,llama.cpp llama-bench tg1024 Llama 3 70B Q4_K_M on A100 SXM 80GB,https://github.com/XiongjieDai/GPU-Benchmarks-on-LLM-Inference,2026-11-27,Q4_K_M mapped to sim int4
+decode_tps,h100|7b|fp16,67.79,tokens/s,llama.cpp llama-bench tg1024 Llama 3 8B F16 on H100 PCIe 80GB,https://github.com/XiongjieDai/GPU-Benchmarks-on-LLM-Inference,2026-11-27,PCIe variant (sim does not distinguish PCIe/SXM)
+decode_tps,h100|7b|int4,144.49,tokens/s,llama.cpp llama-bench tg1024 Llama 3 8B Q4_K_M on H100 PCIe 80GB,https://github.com/XiongjieDai/GPU-Benchmarks-on-LLM-Inference,2026-11-27,PCIe variant
+decode_tps,h100|70b|int4,25.01,tokens/s,llama.cpp llama-bench tg1024 Llama 3 70B Q4_K_M on H100 PCIe 80GB,https://github.com/XiongjieDai/GPU-Benchmarks-on-LLM-Inference,2026-11-27,PCIe variant
+quality,chatbot|3b,0.644,fraction,Qwen2.5-3B-Instruct MMLU-redux,https://qwenlm.github.io/blog/qwen2.5-llm/,2026-11-27,size bucket 3b -> Qwen2.5-3B; chatbot proxied by general knowledge (MMLU-redux)
+quality,chatbot|7b,0.754,fraction,Qwen2.5-7B-Instruct MMLU-redux,https://qwenlm.github.io/blog/qwen2.5-llm/,2026-11-27,
+quality,chatbot|13b,0.800,fraction,Qwen2.5-14B-Instruct MMLU-redux,https://qwenlm.github.io/blog/qwen2.5-llm/,2026-11-27,13b bucket -> 14B (closest available size)
+quality,chatbot|70b,0.868,fraction,Qwen2.5-72B-Instruct MMLU-redux,https://qwenlm.github.io/blog/qwen2.5-llm/,2026-11-27,70b bucket -> 72B
+quality,code_generation|3b,0.744,fraction,Qwen2.5-3B-Instruct HumanEval,https://qwenlm.github.io/blog/qwen2.5-llm/,2026-11-27,pass@1
+quality,code_generation|7b,0.848,fraction,Qwen2.5-7B-Instruct HumanEval,https://qwenlm.github.io/blog/qwen2.5-llm/,2026-11-27,
+quality,code_generation|13b,0.835,fraction,Qwen2.5-14B-Instruct HumanEval,https://qwenlm.github.io/blog/qwen2.5-llm/,2026-11-27,
+quality,code_generation|70b,0.866,fraction,Qwen2.5-72B-Instruct HumanEval,https://qwenlm.github.io/blog/qwen2.5-llm/,2026-11-27,
+quant_drop,7b|int8,0.014,fraction,Qwen2-7B-Instruct MMLU BF16 70.5 -> GPTQ-Int8 69.1,https://qwen.readthedocs.io/en/latest/getting_started/quantization_benchmark.html,2026-11-27,absolute drop in MMLU accuracy
+quant_drop,7b|int4,0.027,fraction,Qwen2-7B-Instruct MMLU BF16 70.5 -> GPTQ-Int4 67.8,https://qwen.readthedocs.io/en/latest/getting_started/quantization_benchmark.html,2026-11-27,
+quant_drop,70b|int8,0.010,fraction,Qwen2-72B-Instruct MMLU BF16 82.3 -> GPTQ-Int8 81.3,https://qwen.readthedocs.io/en/latest/getting_started/quantization_benchmark.html,2026-11-27,72B mapped to 70b bucket
+quant_drop,70b|int4,0.015,fraction,Qwen2-72B-Instruct MMLU BF16 82.3 -> GPTQ-Int4 80.8,https://qwen.readthedocs.io/en/latest/getting_started/quantization_benchmark.html,2026-11-27,

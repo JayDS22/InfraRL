@@ -1,0 +1,98 @@
+diff --git a/infrarl/simulator/hardware.py b/infrarl/simulator/hardware.py
+index 80e95bc..56cafd8 100644
+--- a/infrarl/simulator/hardware.py
++++ b/infrarl/simulator/hardware.py
+@@ -1,8 +1,14 @@
+-"""Hardware lookup table.
++"""Hardware lookup table, recalibrated 2026-11-27 against public data.
+ 
+-Numbers are rough estimates from Nebius Token Factory published specs and NVIDIA
+-MLPerf results. They are PLACEHOLDERS until the 3-config residual check
+-(report Section 2.2) is run; see simulator/estimator.py.
++Sources and fit: docs/EXTERNAL_REFERENCE_CHECK.md, data/benchmarks/external_references_20261127.csv.
++- cost_per_hr_usd: kept where already within 15% of most sources (A10 = AWS g5.xlarge
++  $1.006; H100 = Nebius $4.50, Lambda $4.59, Runpod $4.39); otherwise the median of
++  sourced on-demand prices (A100 80GB: AWS/8, Lambda, Runpod SXM, Runpod PCIe -> $2.69;
++  CPU 128 GiB: AWS r7i.4xlarge $1.06).
++- tps_13b_fp16: least-squares fit (log space) of the estimator's speed formula to measured
++  llama.cpp batch-1 decode speeds for Llama 3 8B/70B on A100 SXM 80GB and H100 PCIe 80GB.
++  A10 and CPU have no public measured reference; they keep the original placeholder ratio
++  to A100 (0.36 and 0.03) and are UNVERIFIED.
+ """
+ from __future__ import annotations
+ 
+@@ -10,10 +16,10 @@ HARDWARE_NAMES = ("cpu", "a10", "a100", "h100")
+ 
+ HARDWARE = {
+     # tps_13b_fp16: single-stream decode tokens/sec for a 13B model at fp16
+-    "cpu": {"memory_gb": 128, "cost_per_hr_usd": 0.40, "tps_13b_fp16": 15},
+-    "a10": {"memory_gb": 24, "cost_per_hr_usd": 1.00, "tps_13b_fp16": 180},
+-    "a100": {"memory_gb": 80, "cost_per_hr_usd": 2.40, "tps_13b_fp16": 500},
+-    "h100": {"memory_gb": 80, "cost_per_hr_usd": 4.50, "tps_13b_fp16": 1100},
++    "cpu": {"memory_gb": 128, "cost_per_hr_usd": 1.06, "tps_13b_fp16": 0.92},   # speed unverified
++    "a10": {"memory_gb": 24, "cost_per_hr_usd": 1.00, "tps_13b_fp16": 11.0},    # speed unverified
++    "a100": {"memory_gb": 80, "cost_per_hr_usd": 2.69, "tps_13b_fp16": 30.5},
++    "h100": {"memory_gb": 80, "cost_per_hr_usd": 4.50, "tps_13b_fp16": 34.3},
+ }
+ 
+ HOURS_PER_MONTH = 24 * 30
+diff --git a/infrarl/simulator/models.py b/infrarl/simulator/models.py
+index c2ff40a..bdd6e57 100644
+--- a/infrarl/simulator/models.py
++++ b/infrarl/simulator/models.py
+@@ -1,8 +1,12 @@
+-"""Model / precision lookup tables.
++"""Model / precision lookup tables, partly recalibrated 2026-11-27 (see docs/EXTERNAL_REFERENCE_CHECK.md).
+ 
+-Quality is a per-use-case placeholder, not independently calibrated benchmark
+-accuracy. Named checkpoints, tasks and compatible metric definitions must be
+-matched before comparing values with public benchmark references.
++Size buckets map to Qwen2.5-Instruct 3B/7B/14B/72B. chatbot = MMLU-redux;
++code_generation = mean of HumanEval and MBPP pass@1 (HumanEval alone is non-monotone
++between 7B and 14B). The other four use cases have no matched public benchmark and keep
++their original PLACEHOLDER values. Precision penalties: INT8 matches Qwen2 GPTQ-Int8
++MMLU drops (0.010-0.014); INT4 = mean of Qwen2 7B/72B GPTQ-Int4 drops (0.027, 0.015).
++Decode speed factors: INT4 fitted to measured llama.cpp Q4_K_M vs F16 (3.08); INT8 is the
++geometric midpoint (1.76, not measured); FP32 = half of FP16 by weight bytes.
+ """
+ from __future__ import annotations
+ 
+@@ -20,16 +24,16 @@ USE_CASES = (
+ PARAMS_B = {"3b": 3, "7b": 7, "13b": 13, "70b": 70}
+ BYTES_PER_PARAM = {"int4": 0.5, "int8": 1.0, "fp16": 2.0, "fp32": 4.0}
+ # decode speed relative to fp16
+-PRECISION_SPEED = {"int4": 2.2, "int8": 1.6, "fp16": 1.0, "fp32": 0.5}
++PRECISION_SPEED = {"int4": 3.08, "int8": 1.76, "fp16": 1.0, "fp32": 0.5}
+ # absolute quality drop vs fp16
+-PRECISION_QUALITY_PENALTY = {"int4": 0.04, "int8": 0.01, "fp16": 0.0, "fp32": 0.0}
++PRECISION_QUALITY_PENALTY = {"int4": 0.021, "int8": 0.01, "fp16": 0.0, "fp32": 0.0}
+ # weights + KV cache / activation overhead
+ MEMORY_OVERHEAD = 1.0
+ 
+ # quality at fp16, indexed by model size
+ BASE_QUALITY = {
+-    "chatbot": {"3b": 0.62, "7b": 0.76, "13b": 0.85, "70b": 0.95},
+-    "code_generation": {"3b": 0.45, "7b": 0.62, "13b": 0.74, "70b": 0.92},
++    "chatbot": {"3b": 0.644, "7b": 0.754, "13b": 0.800, "70b": 0.868},  # sourced
++    "code_generation": {"3b": 0.736, "7b": 0.820, "13b": 0.828, "70b": 0.874},  # sourced
+     "batch_inference": {"3b": 0.60, "7b": 0.72, "13b": 0.80, "70b": 0.90},
+     "rag": {"3b": 0.58, "7b": 0.70, "13b": 0.80, "70b": 0.91},
+     "agentic": {"3b": 0.40, "7b": 0.58, "13b": 0.72, "70b": 0.90},
+diff --git a/tests/test_simulator.py b/tests/test_simulator.py
+index e201b80..8e1f685 100644
+--- a/tests/test_simulator.py
++++ b/tests/test_simulator.py
+@@ -9,9 +9,11 @@ def _chatbot():
+     return Profile("chatbot", 1e5, 500, 0.80, 2000, "low", 1.0, 100, 200, 50)
+ 
+ 
+-def test_matches_demo_smoke_test():
++def test_recalibrated_reference_point():
++    # Pinned after the 2026-11-27 recalibration (docs/EXTERNAL_REFERENCE_CHECK.md).
++    # Pre-recalibration placeholder values (matching demo.py) were (0.85, 400, 1728).
+     q, l, c = estimate(Stack((Tier("a100", "13b", "fp16"),), "static"), _chatbot())
+-    assert (round(q, 2), round(l), round(c)) == (0.85, 400, 1728)
++    assert (round(q, 2), round(l), round(c)) == (0.80, 6557, 1937)
+ 
+ 
+ def test_memory_feasibility():
