@@ -1,0 +1,242 @@
+/* @theme editorial */
+
+@import 'default';
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --cream: #F5F0E8;
+  --ink: #1C1917;
+  --accent: #7C2D12;
+  --muted: #78716C;
+  --soft: #D6D3D1;
+  --appendix-bg: #EAE5DC;
+}
+
+section {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 28px;
+  padding: 80px 100px;
+  justify-content: flex-start;
+  line-height: 1.4;
+}
+
+section::after {
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  margin: 0 0 24px 0;
+}
+
+h1 { font-size: 72px; }
+h2 { font-size: 48px; }
+h3 { font-size: 32px; margin-top: 32px; }
+
+p { margin: 16px 0; }
+ul, ol { margin: 16px 0; padding-left: 36px; }
+li { margin: 10px 0; }
+
+strong { color: var(--accent); font-weight: 600; }
+
+em { color: var(--muted); font-style: italic; }
+
+code {
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.9em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 30px;
+  margin: 30px 0;
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 28px;
+  color: var(--ink);
+}
+
+/* ---- Title slide (first slide) --- */
+section.title {
+  justify-content: center;
+  text-align: center;
+}
+
+section.title h1 {
+  font-size: 108px;
+  margin-bottom: 20px;
+}
+
+section.title .subtitle {
+  font-size: 30px;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 80px;
+  font-family: 'Playfair Display', serif;
+}
+
+section.title .byline {
+  font-size: 22px;
+  color: var(--ink);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ---- Hero number slide --- */
+section.hero {
+  justify-content: flex-start;
+}
+
+section.hero .number {
+  font-family: 'Playfair Display', serif;
+  font-size: 240px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 0.9;
+  margin: 20px 0 20px 0;
+  letter-spacing: -0.04em;
+}
+
+section.hero h2 {
+  font-size: 48px;
+  max-width: 90%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+section.hero .caption {
+  font-size: 20px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 40px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ---- Figure slide --- */
+section.figure {
+  padding: 50px 60px;
+  justify-content: flex-start;
+}
+
+section.figure h2 {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+section.figure img {
+  max-width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  margin: 0 auto;
+  display: block;
+}
+
+section.figure .caption {
+  text-align: center;
+  font-size: 16px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ---- Table slide --- */
+section.table {
+  padding: 60px 80px;
+}
+
+section.table h2 {
+  font-size: 40px;
+}
+
+/* ---- Appendix --- */
+section.appendix {
+  background: var(--appendix-bg);
+}
+
+section.appendix::before {
+  content: 'APPENDIX';
+  position: absolute;
+  top: 40px;
+  right: 60px;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+}
+
+/* ---- Close slide --- */
+section.close {
+  justify-content: center;
+}
+
+section.close .thesis {
+  font-family: 'Playfair Display', serif;
+  font-size: 44px;
+  line-height: 1.35;
+  max-width: 90%;
+  margin: 0 auto;
+  text-align: left;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+section.close .thesis strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+section.close .team {
+  margin-top: 100px;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 14px;
+  color: var(--muted);
+  text-align: left;
+}
+
+/* ---- Tables --- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+  font-size: 22px;
+}
+
+th {
+  text-align: left;
+  border-bottom: 2px solid var(--ink);
+  padding: 14px 18px;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--soft);
+  font-variant-numeric: tabular-nums;
+}
