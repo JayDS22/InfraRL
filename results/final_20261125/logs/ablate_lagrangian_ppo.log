@@ -1,0 +1,17 @@
+[lagrangian_ppo seed 0] reward=1.071 budget=0.836 sla=0.854
+[lagrangian_ppo seed 1] reward=1.050 budget=0.762 sla=0.898
+[lagrangian_ppo seed 2] reward=1.064 budget=0.772 sla=0.912
+
+Ablations (mean over seeds):
+                       mean_cost_usd  avg_quality  quality_compliance  sla_compliance  budget_compliance  mean_reward
+variant                                                                                                              
+full                        3389.808        0.847               0.891           0.888              0.790        1.062
+no_hardware_awareness       2385.792        0.841               0.888           0.836              0.779        1.048
+no_multitier                2882.448        0.842               0.882           0.851              0.836        1.067
+no_precision_tuning         3006.216        0.855               0.915           0.722              0.827        1.045
+no_scaling_policy           3450.912        0.837               0.879           0.900              0.795        1.064
+
+Summary (mean over seeds):
+                quality_compliance  budget_compliance  sla_compliance  meets_all  mean_reward  mean_cost_usd  avg_quality  quality_attainment
+agent                                                                                                                                        
+lagrangian_ppo               0.891               0.79           0.888      0.635        1.062       3389.808        0.847               0.996
