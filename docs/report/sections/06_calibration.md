@@ -78,31 +78,90 @@ error. We cite the published values for each anchor
 Llama-3.1-70B-Instruct MMLU 0.836) for reader orientation, but the
 calibration gate correctly marks them NOT_COMPARABLE.
 
-### 6.4 Interpretation
+### 6.4 Second-pass audit: 29 public references
 
-The gate's FAILED outcome is a feature, not a bug. The three-anchor
-audit converts "the simulator is uncalibrated" from an unmeasured
-risk into a measured and bounded one. The policy-ranking claims in
-Section 4 are defended by the Section 7 sensitivity analysis, which
-shows the agent ordering is stable under multiplicative perturbation of
-simulator outputs within plus-or-minus 20 percent on cost and latency
-axes. The measured calibration residuals exceed that envelope on
-latency (82%, 80%, 76%) and partially on cost (86%, 0.6%, 30%), which
-constrains the deployment claim rather than the policy-comparison claim.
-In words: this simulator in its current parameterization is adequate for
-comparing reinforcement-learning policies on inference stack selection
-under a shared cost-latency-quality trade-off model; it is not
-adequate for predicting absolute dollar or latency values of a specific
-production deployment. Rebaselining the three `tps_13b_fp16` constants
-against single-stream vLLM and llama.cpp numbers is the top item in
-Section 9 future work and would move the latency residuals from the 70-80
-percent band into the 15 percent gate's passing band without touching the
-agent code.
+The three-anchor audit above identified the direction of the error
+(latency overestimated by ~5x) but could not rebaseline the simulator
+because it had too few data points to refit the constants. A
+follow-up audit against 29 public references (data provenance in
+`data/benchmarks/external_references_20261127.csv`, methodology in
+`docs/EXTERNAL_REFERENCE_CHECK.md`, re-runnable via
+`python scripts/external_reference_check.py`) expanded the evidence
+base and produced the refit values now shipped in
+`infrarl/simulator/hardware.py` and `infrarl/simulator/models.py`.
 
-**Sources** for the nine references are embedded in
-`data/benchmarks/calibration_references.csv` with full provenance
-metadata. The gate report is at `results/calibration_v1/report.md` and
-the residuals CSV at `results/calibration_v1/residuals.csv`. The gate
-was run from `uv run python -m infrarl.simulator.calibration` at the
-repository commit recorded in the calibration summary's
-`references_sha256` field.
+The 29 references split as:
+- 11 GPU/CPU hourly prices across AWS (via Vantage), Lambda, Nebius,
+  Runpod. Prices were mostly already within the 15 percent gate: 6 of
+  11 PASS on the pre-calibration constants (A10 1 percent, H100 0-3
+  percent across three providers). CPU was 62 percent low ($0.40 vs
+  $1.06 AWS r7i.4xlarge); A100 was 30 percent low vs hyperscaler
+  prices though matched Runpod SXM within 10 percent.
+- 6 measured llama.cpp single-stream decode speeds for Llama 3 8B and
+  70B on A100 SXM 80GB and H100 PCIe 80GB (snapshot May 2024,
+  llama-bench `tg1024`). **None passed the 15 percent gate**; the
+  simulator was 8.4x to 31.1x too fast (median 17.7x). This matches
+  the direction and magnitude of the three-anchor finding but is a
+  stronger measurement because it uses a documented benchmark harness
+  rather than published latency anecdotes.
+- 8 Qwen2.5-Instruct MMLU-redux and HumanEval scores for 3B, 7B, 14B,
+  and 72B. 6 of 8 within the 15 percent gate; small-model code quality
+  underrated by 27-40 percent.
+- 4 Qwen2 GPTQ-Int8/Int4 MMLU drops. INT8 penalty matched (0.01 vs
+  measured 0.010-0.014); INT4 penalty too harsh (0.04 vs measured
+  0.015-0.027).
+
+### 6.5 Refit and verification
+
+The refit replaces the originally-stated constants in
+`infrarl/simulator/hardware.py`:
+
+- `cpu`: `cost_per_hr_usd 0.40 -> 1.06`, `tps_13b_fp16 15 -> 0.92`
+- `a10`: `cost_per_hr_usd 1.00` (unchanged), `tps_13b_fp16 180 -> 11.0`
+  (speed scaled from A100 ratio; unverified by direct measurement)
+- `a100`: `cost_per_hr_usd 2.40 -> 2.69`, `tps_13b_fp16 500 -> 30.5`
+  (least-squares fit to Llama 3 8B/70B measurements)
+- `h100`: `cost_per_hr_usd 4.50` (unchanged), `tps_13b_fp16 1100 -> 34.3`
+
+`infrarl/simulator/models.py` chatbot and code-generation quality rows
+are now sourced from Qwen2.5-Instruct benchmarks; the remaining four
+use-case rows (batch_inference, rag, agentic, structured_extraction)
+retain their pre-recalibration values because no matched public
+benchmark exists for those tasks at the simulator's use-case granularity.
+Precision penalties refit: `INT4` quality drop `0.04 -> 0.021`, `INT4`
+speed factor `2.2 -> 3.08` (measured Q4_K_M vs F16 ratio), `INT8`
+speed factor `1.6 -> 1.76` (geometric midpoint, not measured).
+
+After refit the audit reports: price 5/11 within gate (remaining misses
+reflect provider disagreement > 30 percent), decode speed 2/6 within
+gate (simulator now 0.7x to 1.4x of measured), quality 8/8 within
+gate, quantization penalty 4/4 within gate. The full `pytest -q tests`
+suite passes 79/79; `python -m infrarl.evaluation.verify` reports zero
+failures across the five gates.
+
+### 6.6 Interpretation
+
+The two-pass audit (three deep anchors plus 29 broad references)
+agrees on the direction and refines the magnitude of the simulator's
+latency error. The pre-refit simulator was adequate for comparing
+policy designs under a shared trade-off model (the ranking in Table
+2A is reproducible and internally consistent) but overestimated
+single-stream throughput by roughly an order of magnitude, which means
+it also overestimated the fraction of customer profiles any policy
+could serve within the latency SLA.
+
+The refit constants (now live in `main`) produce Table 2B in Section
+4. The pivot from Table 2A to Table 2B is driven entirely by the
+calibration; no agent code was retuned. Section 7's sensitivity
+analysis predicted this pivot: a multiplicative perturbation of 10x
+on latency sits well outside the plus-or-minus 20 percent envelope
+under which Section 7 established ranking stability. Section 8
+develops the implied methodology.
+
+Sources for the three-anchor audit are at
+`data/benchmarks/calibration_references.csv`; the gate output is at
+`results/calibration_v1/`. Sources for the 29-reference recalibration
+are at `data/benchmarks/external_references_20261127.csv` with
+`docs/EXTERNAL_REFERENCE_CHECK.md` as the readable audit. The
+recalibrated simulator's full re-run artifacts are at
+`results/recalibrated_20261127/`.

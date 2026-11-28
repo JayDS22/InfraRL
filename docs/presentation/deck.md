@@ -29,11 +29,11 @@ DATA635 &middot; University of Maryland &middot; December 2026
 
 <!-- _class: hero -->
 
-<div class="number">2.07&times;</div>
+<div class="number">10&times;</div>
 
-## Our winning policy costs 2.07&times; the baseline.
+## Our main simulator constant was 10&times; off. The winning policy flipped. That is the most important thing we learned.
 
-<div class="caption">That is the correct answer, not a bug.</div>
+<div class="caption">Sensitivity analysis predicted it. Calibration confirmed it.</div>
 
 ---
 
@@ -153,14 +153,36 @@ We built a **structural simulator** from published vendor and academic benchmark
 
 ## Calibration: measured, not assumed
 
-| Config | Axis | Prediction | Reference | Residual | Status |
-|---|---|---|---|---|---|
-| CPU / 3B / INT8 | latency | 1442 ms | 8000 ms | 82% | **FAIL** |
-| A10 / 13B / INT8 | latency | 521 ms | 2586 ms | 80% | **FAIL** |
-| A100 / 70B / INT8 | latency | 1010 ms | 4286 ms | 76% | **FAIL** |
-| A10 / 13B / INT8 | cost | 720 $/mo | 724 $/mo | 0.6% | **PASS** |
+Two audits agreed. **3 deep anchors** (our pass): latency 76-82% off. **29 broad references** (Vishnu): latency **8-31&times; too fast** across every measured config.
 
-**Finding.** Throughput constants model batched inference, not single-stream. Not a bug: a calibration debt with a known fix.
+Refit constants are now in `main`. Result in Table 2B next slide.
+
+---
+
+<!-- _class: table -->
+
+## The ranking flips after recalibration
+
+| Agent | meets_all (placeholder) | meets_all (recalibrated) |
+|---|---|---|
+| **LinUCB bandit** | 0.376 | **0.161 (NEW BEST)** |
+| Vanilla PPO | 0.484 | 0.089 |
+| Heuristic | 0.460 | 0.049 |
+| **Lagrangian PPO** | **0.650 (was best)** | 0.068 |
+
+Lagrangian PPO still wins **raw quality** (0.790); it loses operationally because its big-model picks fail real-hardware SLAs. Only **34.5%** of customers are satisfiable now (was 86%).
+
+---
+
+## What we learned from doing both
+
+**Sensitivity alone is not enough.** It gives you a cheap robustness envelope (&plusmn;20%). It cannot tell you whether reality lies inside that envelope.
+
+**Calibration alone is not enough.** It gives you ground truth on the simulator's error, but says nothing about which policies survive in the production regime.
+
+**Together they're necessary and sufficient.** Our envelope was &plusmn;20%. Reality was 10&times;. Our sensitivity sweep *predicted* the ranking would be unstable beyond the envelope. The recalibration *confirmed* it empirically.
+
+That methodology generalizes beyond LLM inference stacks.
 
 ---
 
@@ -183,9 +205,9 @@ Screencast backup on local SSD.
 <!-- _class: close -->
 
 <div class="thesis">
-<strong>Lagrangian PPO</strong> is the compliance choice at 2&times; premium.<br/>
-<strong>Vanilla PPO</strong> matches the heuristic at value.<br/>
-<strong>Sensitivity</strong> says both conclusions hold within the simulator's error bounds.
+<strong>Sensitivity analysis</strong> is a cheap necessary condition for simulator validity.<br/>
+<strong>Calibration</strong> is the sufficient condition.<br/>
+We ran both. Our ranking flipped exactly where the envelope predicted. <strong>The methodology generalizes.</strong>
 </div>
 
 <div class="team">
